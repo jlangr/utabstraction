@@ -23,7 +23,6 @@ public class ItemBuilder {
         item.setExpirationDate(expirationDate);
         item.setSellByDate(sellByDate);
         item.setCategory(category);
-        System.out.println("item category in builder: " + item.getCategory());
         return item;
     }
 

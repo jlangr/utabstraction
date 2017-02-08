@@ -21,6 +21,7 @@ dependencies {
     testCompile group: 'com.googlecode.junit-toolbox', name: 'junit-toolbox', version: '2.2'
     compile group: 'com.google.guava', name: 'guava', version: '20.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.6'
+    compile group: 'com.cisco.oss.foundation', name: 'http-client-apache', version: '1.2.1-1'
 }
 
 sourceSets {
