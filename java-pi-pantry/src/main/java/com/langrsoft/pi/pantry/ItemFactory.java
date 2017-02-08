@@ -10,7 +10,7 @@ import com.langrsoft.util.JsonUtil;
 public class ItemFactory {
     private Map<String, String> numberToLocalNameMappings = new HashMap<>();
     private Clock clock = Clock.systemDefaultZone();
-    private ShelfLifeData shelfLifeData = new ShelfLifeData();
+    private ShelfLifeRepository shelfLifeData = new ShelfLifeRepository();
 
     public Item create(String json ) {
         Item item = JsonUtil.parse(json, Item.class);

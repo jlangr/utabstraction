@@ -13,13 +13,13 @@ public class AnItemRetrieverWithSpecificApiPropertyKey {
 
     @Before
     public void setApiKey() {
-        currentApiKey = System.getProperty(ItemRetriever.UPC_API_PROPERTY_KEY);
-        System.setProperty(ItemRetriever.UPC_API_PROPERTY_KEY, SOME_API_KEY);
+        currentApiKey = System.getProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME);
+        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, SOME_API_KEY);
     }
 
     @After
     public void resetApiKey() {
-        System.setProperty(ItemRetriever.UPC_API_PROPERTY_KEY, currentApiKey);
+        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey);
     }
 
     @Test

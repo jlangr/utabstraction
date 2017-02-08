@@ -3,9 +3,9 @@ package com.langrsoft.pi.pantry;
 import java.time.LocalDate;
 
 public class ExpirationDataCalculator {
-    private ShelfLifeData shelfLifeData;
+    private ShelfLifeRepository shelfLifeData;
 
-    public ExpirationDataCalculator(ShelfLifeData shelfLifeData) {
+    public ExpirationDataCalculator(ShelfLifeRepository shelfLifeData) {
         this.shelfLifeData = shelfLifeData;
     }
 

@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 // based on http://site.foodshare.org/site/DocServer/Food_Storage_and_Shelf_Life_Guidelines.pdf?docID=5822
-public class ShelfLifeData {
+public class ShelfLifeRepository {
     private Map<String, ShelfLife> shelfLifeByCategory = new HashMap<>();
+    // TODO read from file? use obj[] at least?
     private Map<String, ShelfLife> data = ImmutableMap.<String, ShelfLife>builder()
             .put("shredded high moisture cheese", new ShelfLife(21, 180))
             .put("shredded low moisture cheese", new ShelfLife(30, 180))
@@ -141,13 +142,14 @@ public class ShelfLifeData {
             .put("sausage", new ShelfLife(7, 270))
             .build();
 
-    public ShelfLifeData() {
+    public ShelfLifeRepository() {
         shelfLifeByCategory.putAll(data);
     }
 
-    // TODO can we add to this or do we need to populate another map?
+    // TODO inject loaded data or is this ok?
 
-    // TODO add test
+    // TODO add tests
+
     public boolean contains(String category) {
         return shelfLifeByCategory.containsKey(category);
     }
@@ -158,6 +160,5 @@ public class ShelfLifeData {
 
     public void add(String category, ShelfLife shelfLife) {
         shelfLifeByCategory.put(category, shelfLife);
-
     }
 }

@@ -80,7 +80,7 @@ public class AnItemFactory {
 
     @Test
     public void defaultsCategoryToNameIfRecognized() {
-        assertThat(new ShelfLifeData().contains("milk"), is(true));
+        assertThat(new ShelfLifeRepository().contains("milk"), is(true));
         String itemJson = toJson(new ItemBuilder("milk").create());
 
         Item parsedItem = factory.create(itemJson);
