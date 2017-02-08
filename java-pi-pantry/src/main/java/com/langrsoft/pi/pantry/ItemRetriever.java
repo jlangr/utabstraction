@@ -11,6 +11,8 @@ import java.io.IOException;
 
 public class ItemRetriever {
     private static final String API_SERVER = "http://api.upcdatabase.org";
+    public static final String UPC_API_PROPERTY_KEY = "upcdatabase_api_key";
+    private String upcApiKey = System.getProperty(UPC_API_PROPERTY_KEY);
     private CloseableHttpClient httpClient;
 
     public ItemRetriever(CloseableHttpClient httpClient) {
@@ -21,12 +23,10 @@ public class ItemRetriever {
         this(HttpClients.createDefault());
     }
 
-    // TODO test for failure
-    // TODO externalize API key
-    public String retrieveJson(String upcNumber) throws IOException {
+    // TODO genericize and move this method to take a url
+    String retrieveJson(String upcNumber) throws IOException {
         try {
-            String apiKey = "a6f99f4c683845042ae27bbf3e36aeee";
-            String url = String.format("%s/json/%s/%s", API_SERVER, apiKey, upcNumber);
+            String url = url(upcNumber);
             HttpGet request = new HttpGet(url);
             HttpResponse response = httpClient.execute(request);
             return EntityUtils.toString(response.getEntity());
@@ -37,6 +37,10 @@ public class ItemRetriever {
         finally {
             httpClient.close();
         }
+    }
+
+    String url(String upcNumber) {
+        return String.format("%s/json/%s/%s", API_SERVER, upcApiKey, upcNumber);
     }
 
     public Item retrieve(String upcNumber) {
