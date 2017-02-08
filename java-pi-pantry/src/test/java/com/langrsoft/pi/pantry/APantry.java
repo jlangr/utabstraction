@@ -3,6 +3,7 @@ package com.langrsoft.pi.pantry;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import static java.util.Arrays.asList;
 import java.time.*;
 import java.util.*;
 
@@ -10,6 +11,7 @@ import static java.util.stream.Collectors.toList;
 
 import com.langrsoft.util.TestClock;
 import org.junit.*;
+import org.junit.experimental.theories.suppliers.TestedOn;
 
 public class APantry {
     Pantry pantry = new Pantry();
@@ -82,6 +84,19 @@ public class APantry {
         List<Item> coffees = pantry.getItemsNamed("coffee");
 
         assertThat(coffees.stream().map(coffee -> coffee.getDescription()).collect(toList()),
-                equalTo(Arrays.asList("small", "large")));
+                equalTo(asList("small", "large")));
+    }
+
+    @Test
+    public void listsItemsExpiringToday() {
+        LocalDate today = LocalDate.now();
+        pantry.setClock(TestClock.fixedTo(today));
+        pantry.purchase(new ItemBuilder("milk").withExpirationDate(today).create());
+        pantry.purchase(new ItemBuilder("item expiring tomorrow").withExpirationDate(today.plusDays(1)).create());
+
+        List<Item> items = pantry.getItemsExpiringToday();
+
+        assertThat(items.stream().map(item -> item.getName()).collect(toList()),
+                equalTo(asList("milk")));
     }
 }

@@ -1,5 +1,6 @@
 package com.langrsoft.pi.pantry;
 
+import com.langrsoft.util.JsonParseException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -7,9 +8,12 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.langrsoft.util.JsonUtil.toJson;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,7 +33,7 @@ public class AnItemFactory {
                               + "\"rate_up\":0,"
                               + "\"rate_down\":0}";
 
-        Item item = factory.parse(responseBody);
+        Item item = factory.create(responseBody);
 
         assertThat(item.getName(), equalTo("Cheerios"));
         assertThat(item.getDescription(), equalTo("Da Big Box"));
@@ -39,21 +43,34 @@ public class AnItemFactory {
     public void assignsNameToSourceName() {
         String serverItemJson = toJson(new ItemBuilder("Cheerios").withSourceName("xxx").create());
 
-        Item item = factory.parse(serverItemJson);
+        Item item = factory.create(serverItemJson);
 
         assertThat(item.getSourceName(), equalTo("Cheerios"));
     }
 
-    @Test(expected = ItemParseException.class)
+    @Test
+    public void replacesNameUsingLookupTable() {
+        String serverItemJson = toJson(new ItemBuilder("Wheaties 40oz").withNumber("999").create());
+        Map<String,String> numbersToLocalNames = new HashMap<>();
+        numbersToLocalNames.put("999", "Wheaties");
+        factory.setNumberToLocalNameMappings(numbersToLocalNames);
+
+        Item item = factory.create(serverItemJson);
+
+        assertThat(item.getName(), is(equalTo("Wheaties")));
+        assertThat(item.getSourceName(), is(equalTo("Wheaties 40oz")));
+    }
+
+    @Test(expected = JsonParseException.class)
     public void throwsARuntimeExceptionOnParseFailure() {
-        factory.parse("BAD BAD JSON!");
+        factory.create("BAD BAD JSON!");
     }
 
     @Test
     public void defaultsExpirationDateToIndefinite() {
         String emptyItemJson = toJson(new Item());
 
-        Item parsedItem = factory.parse(emptyItemJson);
+        Item parsedItem = factory.create(emptyItemJson);
 
         assertThat(parsedItem.getExpirationDate(), equalTo(LocalDate.MAX));
     }

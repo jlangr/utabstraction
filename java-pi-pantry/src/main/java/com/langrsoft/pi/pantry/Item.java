@@ -1,7 +1,9 @@
 package com.langrsoft.pi.pantry;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.time.LocalDate;
 
 public class Item {
    // see http://stackoverflow.com/questions/10519265/jackson-overcoming-underscores-in-favor-of-camel-case for alternatives
@@ -9,6 +11,7 @@ public class Item {
    private boolean isValid;
    @JsonProperty("itemname")
    private String name;
+   // alias is used by the UPC API for "developer" purposes. We will ignore it and track a sourceName instead.
    private String alias;
    private String description;
    @JsonProperty("avg_price")
@@ -19,8 +22,11 @@ public class Item {
    private int rateDown;
    private String number;
 
+   @JsonIgnore
    private LocalDate purchaseDate;
+   @JsonIgnore
    private LocalDate expirationDate;
+   @JsonIgnore
    private String sourceName;
 
    public Item() {}
@@ -92,5 +98,13 @@ public class Item {
 
    public void setExpirationDate(LocalDate date) {
       expirationDate = date;
+   }
+
+   public void setNumber(String number) {
+      this.number = number;
+   }
+
+   public void setName(String name) {
+      this.name = name;
    }
 }

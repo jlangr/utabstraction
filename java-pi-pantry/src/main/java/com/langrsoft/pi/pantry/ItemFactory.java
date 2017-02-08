@@ -1,21 +1,28 @@
 package com.langrsoft.pi.pantry;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.langrsoft.util.JsonUtil;
 
 public class ItemFactory {
-   private ObjectMapper mapper = new ObjectMapper();
+    private Map<String, String> numberToLocalNameMappings = new HashMap<>();
 
-   public Item parse(String responseBody) {
-      try {
-         Item item = mapper.readValue(responseBody, Item.class);
-         item.setSourceName(item.getName());
-         item.setExpirationDate(LocalDate.MAX);
-         return item;
-      } catch (IOException e) {
-         throw new ItemParseException();
-      }
-   }
+    public Item create(String responseBody) {
+        Item item = JsonUtil.parse(responseBody, Item.class);
+        item.setSourceName(item.getName());
+        item.setExpirationDate(LocalDate.MAX);
+        changeNameIfLocalMappingExists(item);
+        return item;
+    }
 
+    private void changeNameIfLocalMappingExists(Item item) {
+        if (numberToLocalNameMappings.containsKey(item.getNumber()))
+            item.setName(numberToLocalNameMappings.get(item.getNumber()));
+    }
+
+    public void setNumberToLocalNameMappings(Map<String, String> numberToLocalNameMappings) {
+        this.numberToLocalNameMappings = numberToLocalNameMappings;
+    }
 }
