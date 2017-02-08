@@ -29,7 +29,7 @@ public class Item {
     @JsonIgnore
     private String sourceName;
     @JsonIgnore
-    private String genericName;
+    private String category;
     @JsonIgnore
     private LocalDate sellByDate;
 
@@ -113,12 +113,12 @@ public class Item {
         this.name = name;
     }
 
-    public String getGenericName() {
-        return genericName;
+    public String getCategory() {
+        return category;
     }
 
-    public void setGenericName(String genericName) {
-        this.genericName = genericName;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public LocalDate getSellByDate() {

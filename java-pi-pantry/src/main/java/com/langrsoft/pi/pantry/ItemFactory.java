@@ -10,6 +10,7 @@ import com.langrsoft.util.JsonUtil;
 public class ItemFactory {
     private Map<String, String> numberToLocalNameMappings = new HashMap<>();
     private Clock clock = Clock.systemDefaultZone();
+    private ShelfLifeData shelfLifeData = new ShelfLifeData();
 
     public Item create(String json ) {
         Item item = JsonUtil.parse(json, Item.class);
@@ -17,7 +18,13 @@ public class ItemFactory {
         item.setExpirationDate(LocalDate.MAX);
         item.setSellByDate(LocalDate.now(clock));
         changeNameIfLocalMappingExists(item);
+        changeCategoryIfRecognized(item);
         return item;
+    }
+
+    private void changeCategoryIfRecognized(Item item) {
+        if (shelfLifeData.contains(item.getName()))
+            item.setCategory(item.getName());
     }
 
     private void changeNameIfLocalMappingExists(Item item) {

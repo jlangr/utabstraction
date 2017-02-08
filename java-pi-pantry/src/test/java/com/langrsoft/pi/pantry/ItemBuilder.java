@@ -4,10 +4,12 @@ import java.time.LocalDate;
 
 public class ItemBuilder {
     private String name;
-    private String description = "";
-    private String sourceName = "";
-    private String number = "";
-    private LocalDate expirationDate = LocalDate.MAX;
+    private String description;
+    private String sourceName;
+    private String number;
+    private String category;
+    private LocalDate expirationDate;
+    private LocalDate sellByDate;
 
     public ItemBuilder(String name) {
         this.name = name;
@@ -19,6 +21,9 @@ public class ItemBuilder {
         item.setSourceName(sourceName);
         item.setNumber(number);
         item.setExpirationDate(expirationDate);
+        item.setSellByDate(sellByDate);
+        item.setCategory(category);
+        System.out.println("item category in builder: " + item.getCategory());
         return item;
     }
 
@@ -39,6 +44,16 @@ public class ItemBuilder {
 
     public ItemBuilder withExpirationDate(LocalDate date) {
         this.expirationDate = date;
+        return this;
+    }
+
+    public ItemBuilder withCategory(String category) {
+        this.category = category;
+        return this;
+    }
+
+    public ItemBuilder withSellByDate(LocalDate date) {
+        this.sellByDate = date;
         return this;
     }
 }

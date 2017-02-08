@@ -47,4 +47,10 @@ public class Pantry {
                 .filter(item -> item.getExpirationDate().isEqual(LocalDate.now(clock)))
                 .collect(Collectors.toList());
     }
+
+    public LocalDate getExpirationDate(Item item) {
+        if (item.getExpirationDate() == null)
+            return LocalDate.MAX;
+        return item.getExpirationDate();
+    }
 }

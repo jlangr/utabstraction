@@ -14,7 +14,8 @@ import java.util.Map;
 
 import static com.langrsoft.util.JsonUtil.toJson;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -75,6 +76,25 @@ public class AnItemFactory {
         Item parsedItem = factory.create(toJson(new Item()));
 
         assertThat(parsedItem.getSellByDate(), equalTo(now));
+    }
+
+    @Test
+    public void defaultsCategoryToNameIfRecognized() {
+        assertThat(new ShelfLifeData().contains("milk"), is(true));
+        String itemJson = toJson(new ItemBuilder("milk").create());
+
+        Item parsedItem = factory.create(itemJson);
+
+        assertThat(parsedItem.getCategory(), is(equalTo("milk")));
+    }
+
+    @Test
+    public void defaultsCategoryToNullWhenNotRecognized() {
+        String itemJson = toJson(new ItemBuilder("nonexistent category").create());
+
+        Item parsedItem = factory.create(itemJson);
+
+        assertThat(parsedItem.getCategory(), is(nullValue()));
     }
 
     @Test

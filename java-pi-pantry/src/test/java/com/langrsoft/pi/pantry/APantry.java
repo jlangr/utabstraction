@@ -13,6 +13,7 @@ import static org.junit.Assert.assertThat;
 
 public class APantry {
     Pantry pantry = new Pantry();
+    static final LocalDate TODAY = LocalDate.now();
 
     @Test
     public void containsAPurchasedItem() {
@@ -29,7 +30,7 @@ public class APantry {
 
         boolean containsItem = pantry.contains("sugar");
 
-        assertThat(containsItem, not(equalTo(true)));
+        assertThat(containsItem, is(equalTo(false)));
     }
 
     @Test
@@ -38,7 +39,7 @@ public class APantry {
     }
 
     @Test
-    public void tracksCountOfItemsPurchased() {
+    public void answersCountOfItemsPurchased() {
         pantry.purchase(new Item("sugar"));
         pantry.purchase(new Item("cheerios"));
         pantry.purchase(new Item("cheerios"));
@@ -60,13 +61,12 @@ public class APantry {
 
     @Test
     public void attachesDateToThePurchase() {
-        LocalDate now = LocalDate.now();
-        pantry.setClock(TestClock.fixedTo(now));
+        pantry.setClock(TestClock.fixedTo(TODAY));
 
-        pantry.purchase(new Item("peanut butter"));
+        pantry.purchase(new Item("eggs"));
 
-        Item retrieved = pantry.getItemNamed("peanut butter");
-        assertThat(retrieved.getPurchaseDate(), is(equalTo(now)));
+        Item retrieved = pantry.getItemNamed("eggs");
+        assertThat(retrieved.getPurchaseDate(), is(equalTo(TODAY)));
     }
 
     @Test

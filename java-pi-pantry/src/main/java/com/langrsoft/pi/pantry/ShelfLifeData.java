@@ -2,10 +2,12 @@ package com.langrsoft.pi.pantry;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.util.HashMap;
 import java.util.Map;
 
 // based on http://site.foodshare.org/site/DocServer/Food_Storage_and_Shelf_Life_Guidelines.pdf?docID=5822
 public class ShelfLifeData {
+    private Map<String, ShelfLife> shelfLifeByCategory = new HashMap<>();
     private Map<String, ShelfLife> data = ImmutableMap.<String, ShelfLife>builder()
             .put("shredded high moisture cheese", new ShelfLife(21, 180))
             .put("shredded low moisture cheese", new ShelfLife(30, 180))
@@ -138,4 +140,24 @@ public class ShelfLifeData {
             .put("raw sausage", new ShelfLife(2, 180))
             .put("sausage", new ShelfLife(7, 270))
             .build();
+
+    public ShelfLifeData() {
+        shelfLifeByCategory.putAll(data);
+    }
+
+    // TODO can we add to this or do we need to populate another map?
+
+    // TODO add test
+    public boolean contains(String category) {
+        return shelfLifeByCategory.containsKey(category);
+    }
+
+    public ShelfLife get(String category) {
+        return shelfLifeByCategory.get(category);
+    }
+
+    public void add(String category, ShelfLife shelfLife) {
+        shelfLifeByCategory.put(category, shelfLife);
+
+    }
 }
