@@ -37,7 +37,7 @@ public class APantry {
     }
 
     @Test
-    public void countOfItemPurchase() {
+    public void tracksCountOfItemsPurchased() {
         pantry.purchase(new Item("sugar"));
         pantry.purchase(new Item("cheerios"));
         pantry.purchase(new Item("cheerios"));
@@ -60,34 +60,26 @@ public class APantry {
     @Test
     public void attachesDateToThePurchase() {
         LocalDate now = LocalDate.now();
-        pantry.setClock(clockFixedTo(now));
+        pantry.setClock(TestClock.fixedTo(now));
 
-        Item peanutButter = new Item("peanut butter");
-
-        pantry.purchase(peanutButter);
+        pantry.purchase(new Item("peanut butter"));
 
         Item retrieved = pantry.getItemNamed("peanut butter");
         assertThat(retrieved.getPurchaseDate(), is(equalTo(now)));
     }
 
-    private Clock clockFixedTo(LocalDate localDate) {
-        return Clock.fixed(localDate.atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
-    }
-
     @Test
-    public void itemRetrievalByNameReturnsNullWhenNotFound() {
+    public void returnsNullWhenRetrieveByItemNameFindsNothing() {
         assertThat(pantry.getItemNamed("did not purchase"), is(nullValue()));
     }
 
     @Test
-    public void retrievesAllItemsForName() {
-        Item smallCoffee = new ItemBuilder("coffee").withDescription("small").create();
-        Item largeCoffee = new ItemBuilder("coffee").withDescription("large").create();
-
-        pantry.purchase(smallCoffee);
-        pantry.purchase(largeCoffee);
+    public void retrievesAllItemsWithMatchingName() {
+        pantry.purchase(new ItemBuilder("coffee").withDescription("small").create());
+        pantry.purchase(new ItemBuilder("coffee").withDescription("large").create());
 
         List<Item> coffees = pantry.getItemsNamed("coffee");
+
         assertThat(coffees.stream().map(coffee -> coffee.getDescription()).collect(toList()),
                 equalTo(Arrays.asList("small", "large")));
     }
