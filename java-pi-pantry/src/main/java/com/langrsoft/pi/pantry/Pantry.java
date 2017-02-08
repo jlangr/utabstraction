@@ -1,18 +1,24 @@
 package com.langrsoft.pi.pantry;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.*;
 
 public class Pantry {
    private Map<String, List<Item>> items = new HashMap<>();
+   private Clock clock = Clock.systemDefaultZone();
 
    public void purchase(Item item) {
-      item.setPurchaseDate(LocalDate.now()); // TODO use clock
+      item.setPurchaseDate(LocalDate.now(clock));
 
       List<Item> existingItems = getItemsNamed(item.getName());
       if (existingItems.isEmpty())
          items.put(item.getName(), existingItems);
       existingItems.add(item);
+   }
+
+   void setClock(Clock clock) {
+      this.clock = clock;
    }
 
    public boolean contains(String name) {

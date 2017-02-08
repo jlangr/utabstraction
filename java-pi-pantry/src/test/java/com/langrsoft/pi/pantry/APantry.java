@@ -2,86 +2,93 @@ package com.langrsoft.pi.pantry;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
 import java.time.*;
 import java.util.*;
+
 import static java.util.stream.Collectors.toList;
+
 import org.junit.*;
 
 public class APantry {
-   Pantry pantry = new Pantry();
+    Pantry pantry = new Pantry();
 
-   @Test
-   public void containsAPurchasedItem() {
-      pantry.purchase(new Item("cheerios"));
+    @Test
+    public void containsAPurchasedItem() {
+        pantry.purchase(new Item("cheerios"));
 
-      boolean containsItem = pantry.contains("cheerios");
+        boolean containsItem = pantry.contains("cheerios");
 
-      assertThat(containsItem, equalTo(true));
-   }
+        assertThat(containsItem, equalTo(true));
+    }
 
-   @Test
-   public void doesNotContainItemNotPurchased() {
-      pantry.purchase(new Item("cheerios"));
+    @Test
+    public void doesNotContainItemNotPurchased() {
+        pantry.purchase(new Item("cheerios"));
 
-      boolean containsItem = pantry.contains("sugar");
+        boolean containsItem = pantry.contains("sugar");
 
-      assertThat(containsItem, not(equalTo(true)));
-   }
+        assertThat(containsItem, not(equalTo(true)));
+    }
 
-   @Test
-   public void countOfItemNotPurchasedIsZero() {
-      assertThat(pantry.count("sugar"), is(equalTo(0)));
-   }
+    @Test
+    public void countOfItemNotPurchasedIsZero() {
+        assertThat(pantry.count("sugar"), is(equalTo(0)));
+    }
 
-   @Test
-   public void countOfItemPurchase() {
-      pantry.purchase(new Item("sugar"));
-      pantry.purchase(new Item("cheerios"));
-      pantry.purchase(new Item("cheerios"));
+    @Test
+    public void countOfItemPurchase() {
+        pantry.purchase(new Item("sugar"));
+        pantry.purchase(new Item("cheerios"));
+        pantry.purchase(new Item("cheerios"));
 
-      int count = pantry.count("cheerios");
+        int count = pantry.count("cheerios");
 
-      assertThat(count, is(equalTo(2)));
-   }
+        assertThat(count, is(equalTo(2)));
+    }
 
-   @Test
-   public void retainsItemDetails() {
-      Item sugar = new ItemBuilder("sugar").withDescription("refined sweetener").create();
+    @Test
+    public void retainsItemDetails() {
+        Item sugar = new ItemBuilder("sugar").withDescription("refined sweetener").create();
 
-      pantry.purchase(sugar);
+        pantry.purchase(sugar);
 
-      Item retrieved = pantry.getItemNamed("sugar");
-      assertThat(retrieved.getDescription(), is(equalTo("refined sweetener")));
-   }
+        Item retrieved = pantry.getItemNamed("sugar");
+        assertThat(retrieved.getDescription(), is(equalTo("refined sweetener")));
+    }
 
-   @Test
-   public void attachesDateToThePurchase() {
-      // TODO use clock
-//      Clock clock = Clock.fixed(Instant., zone);
-//      LocalDate today = LocalDate.now(clock);
-      Item peanutButter = new Item("peanut butter");
+    @Test
+    public void attachesDateToThePurchase() {
+        LocalDate now = LocalDate.now();
+        pantry.setClock(clockFixedTo(now));
 
-      pantry.purchase(peanutButter);
+        Item peanutButter = new Item("peanut butter");
 
-      Item retrieved = pantry.getItemNamed("peanut butter");
-      assertThat(retrieved.getPurchaseDate(), is(equalTo(LocalDate.now())));
-   }
+        pantry.purchase(peanutButter);
 
-   @Test
-   public void itemRetrievalByNameReturnsNullWhenNotFound() {
-      assertThat(pantry.getItemNamed("did not purchase"), is(nullValue()));
-   }
+        Item retrieved = pantry.getItemNamed("peanut butter");
+        assertThat(retrieved.getPurchaseDate(), is(equalTo(now)));
+    }
 
-   @Test
-   public void retrievesAllItemsForName() {
-      Item smallCoffee = new ItemBuilder("coffee").withDescription("small").create();
-      Item largeCoffee = new ItemBuilder("coffee").withDescription("large").create();
+    private Clock clockFixedTo(LocalDate localDate) {
+        return Clock.fixed(localDate.atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
+    }
 
-      pantry.purchase(smallCoffee);
-      pantry.purchase(largeCoffee);
+    @Test
+    public void itemRetrievalByNameReturnsNullWhenNotFound() {
+        assertThat(pantry.getItemNamed("did not purchase"), is(nullValue()));
+    }
 
-      List<Item> coffees = pantry.getItemsNamed("coffee");
-      assertThat(coffees.stream().map(coffee -> coffee.getDescription()).collect(toList()),
-         equalTo(Arrays.asList("small", "large")));
-   }
+    @Test
+    public void retrievesAllItemsForName() {
+        Item smallCoffee = new ItemBuilder("coffee").withDescription("small").create();
+        Item largeCoffee = new ItemBuilder("coffee").withDescription("large").create();
+
+        pantry.purchase(smallCoffee);
+        pantry.purchase(largeCoffee);
+
+        List<Item> coffees = pantry.getItemsNamed("coffee");
+        assertThat(coffees.stream().map(coffee -> coffee.getDescription()).collect(toList()),
+                equalTo(Arrays.asList("small", "large")));
+    }
 }
