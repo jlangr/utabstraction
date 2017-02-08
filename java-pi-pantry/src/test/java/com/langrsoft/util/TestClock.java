@@ -1,4 +1,4 @@
-package com.langrsoft.pi.pantry;
+package com.langrsoft.util;
 
 import java.time.Clock;
 import java.time.LocalDate;

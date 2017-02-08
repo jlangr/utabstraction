@@ -1,16 +1,16 @@
 package com.langrsoft.pi.pantry;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-
-import java.time.LocalDate;
-
-import org.junit.*;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.time.LocalDate;
+
+import static com.langrsoft.util.JsonUtil.toJson;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AnItemFactory {
@@ -19,7 +19,7 @@ public class AnItemFactory {
     private ItemFactory factory = new ItemFactory();
 
     @Test
-    public void populatesAnItemFromJson() {
+    public void populatesItemFromJson() {
         String responseBody = "{\"valid\":\"true\","
                               + "\"number\":\"0016000275645\","
                               + "\"itemname\":\"Cheerios\","
@@ -28,6 +28,7 @@ public class AnItemFactory {
                               + "\"avg_price\":\"\","
                               + "\"rate_up\":0,"
                               + "\"rate_down\":0}";
+
         Item item = factory.parse(responseBody);
 
         assertThat(item.getName(), equalTo("Cheerios"));
@@ -36,20 +37,11 @@ public class AnItemFactory {
 
     @Test
     public void assignsNameToSourceName() {
-        String serverItemJson = toJson(new ItemBuilder("Cheerios").withSourceName("sourceName").create());
+        String serverItemJson = toJson(new ItemBuilder("Cheerios").withSourceName("xxx").create());
 
         Item item = factory.parse(serverItemJson);
 
         assertThat(item.getSourceName(), equalTo("Cheerios"));
-    }
-
-    private String toJson(Item serverItem) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(serverItem);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Test(expected = ItemParseException.class)
@@ -58,7 +50,7 @@ public class AnItemFactory {
     }
 
     @Test
-    public void expirationDateIndefiniteByDefault() {
+    public void defaultsExpirationDateToIndefinite() {
         String emptyItemJson = toJson(new Item());
 
         Item parsedItem = factory.parse(emptyItemJson);
