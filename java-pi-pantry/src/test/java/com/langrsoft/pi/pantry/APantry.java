@@ -1,17 +1,15 @@
 package com.langrsoft.pi.pantry;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import com.langrsoft.util.TestClock;
+import org.junit.Test;
+
+import java.time.LocalDate;
+import java.util.List;
 
 import static java.util.Arrays.asList;
-import java.time.*;
-import java.util.*;
-
 import static java.util.stream.Collectors.toList;
-
-import com.langrsoft.util.TestClock;
-import org.junit.*;
-import org.junit.experimental.theories.suppliers.TestedOn;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 public class APantry {
     Pantry pantry = new Pantry();

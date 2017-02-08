@@ -1,6 +1,7 @@
 package com.langrsoft.pi.pantry;
 
 import com.langrsoft.util.JsonParseException;
+import com.langrsoft.util.TestClock;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -64,6 +65,16 @@ public class AnItemFactory {
     @Test(expected = JsonParseException.class)
     public void throwsARuntimeExceptionOnParseFailure() {
         factory.create("BAD BAD JSON!");
+    }
+
+    @Test
+    public void defaultsSellByDateToPurchaseDate() {
+        LocalDate now = LocalDate.now();
+        factory.setClock(TestClock.fixedTo(now));
+
+        Item parsedItem = factory.create(toJson(new Item()));
+
+        assertThat(parsedItem.getSellByDate(), equalTo(now));
     }
 
     @Test

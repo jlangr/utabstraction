@@ -6,105 +6,126 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 
 public class Item {
-   // see http://stackoverflow.com/questions/10519265/jackson-overcoming-underscores-in-favor-of-camel-case for alternatives
-   @JsonProperty("valid")
-   private boolean isValid;
-   @JsonProperty("itemname")
-   private String name;
-   // alias is used by the UPC API for "developer" purposes. We will ignore it and track a sourceName instead.
-   private String alias;
-   private String description;
-   @JsonProperty("avg_price")
-   private String averagePrice;
-   @JsonProperty("rate_up")
-   private int rateUp;
-   @JsonProperty("rate_down")
-   private int rateDown;
-   private String number;
+    // see http://stackoverflow.com/questions/10519265/jackson-overcoming-underscores-in-favor-of-camel-case for alternatives
+    @JsonProperty("valid")
+    private boolean isValid;
+    @JsonProperty("itemname")
+    private String name;
+    // alias is used by the UPC API for "developer" purposes. We will ignore it and track a sourceName instead.
+    private String alias;
+    private String description;
+    @JsonProperty("avg_price")
+    private String averagePrice;
+    @JsonProperty("rate_up")
+    private int rateUp;
+    @JsonProperty("rate_down")
+    private int rateDown;
+    private String number;
 
-   @JsonIgnore
-   private LocalDate purchaseDate;
-   @JsonIgnore
-   private LocalDate expirationDate;
-   @JsonIgnore
-   private String sourceName;
+    @JsonIgnore
+    private LocalDate purchaseDate;
+    @JsonIgnore
+    private LocalDate expirationDate;
+    @JsonIgnore
+    private String sourceName;
+    @JsonIgnore
+    private String genericName;
+    @JsonIgnore
+    private LocalDate sellByDate;
 
-   public Item() {}
+    public Item() {
+    }
 
-   public Item(String name) {
-      this.name = name;
-   }
+    public Item(String name) {
+        this.name = name;
+    }
 
-   public Item(String name, String description) {
-      this(name);
-      this.description = description;
-   }
+    public Item(String name, String description) {
+        this(name);
+        this.description = description;
+    }
 
-   public String getNumber() {
-      return number;
-   }
+    public String getNumber() {
+        return number;
+    }
 
-   public String getAlias() {
-      return alias;
-   }
+    public String getAlias() {
+        return alias;
+    }
 
-   public String getName() {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public String getDescription() {
-      return description;
-   }
+    public String getDescription() {
+        return description;
+    }
 
-   public boolean isValid() {
-      return isValid;
-   }
+    public boolean isValid() {
+        return isValid;
+    }
 
-   public String getAveragePrice() {
-      return averagePrice;
-   }
+    public String getAveragePrice() {
+        return averagePrice;
+    }
 
-   public int getRateUp() {
-      return rateUp;
-   }
+    public int getRateUp() {
+        return rateUp;
+    }
 
-   public int getRateDown() {
-      return rateDown;
-   }
+    public int getRateDown() {
+        return rateDown;
+    }
 
-   public void setDescription(String description) {
-      this.description = description;
-   }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-   public LocalDate getPurchaseDate() {
-      return purchaseDate;
-   }
+    public LocalDate getPurchaseDate() {
+        return purchaseDate;
+    }
 
-   public void setPurchaseDate(LocalDate date) {
-      this.purchaseDate = date;
-   }
+    public void setPurchaseDate(LocalDate date) {
+        this.purchaseDate = date;
+    }
 
-   public String getSourceName() {
-      return sourceName;
-   }
+    public String getSourceName() {
+        return sourceName;
+    }
 
-   public void setSourceName(String sourceName) {
-      this.sourceName = sourceName;
-   }
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
+    }
 
-   public LocalDate getExpirationDate() {
-      return expirationDate;
-   }
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
 
-   public void setExpirationDate(LocalDate date) {
-      expirationDate = date;
-   }
+    public void setExpirationDate(LocalDate date) {
+        expirationDate = date;
+    }
 
-   public void setNumber(String number) {
-      this.number = number;
-   }
+    public void setNumber(String number) {
+        this.number = number;
+    }
 
-   public void setName(String name) {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGenericName() {
+        return genericName;
+    }
+
+    public void setGenericName(String genericName) {
+        this.genericName = genericName;
+    }
+
+    public LocalDate getSellByDate() {
+        return sellByDate;
+    }
+
+    public void setSellByDate(LocalDate sellByDate) {
+        this.sellByDate = sellByDate;
+    }
 }
