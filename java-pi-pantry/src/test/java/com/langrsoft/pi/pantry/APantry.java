@@ -1,9 +1,11 @@
 package com.langrsoft.pi.pantry;
 
 import com.langrsoft.util.TestClock;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.time.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -16,7 +18,7 @@ import static org.junit.Assert.fail;
 
 public class APantry {
     @Test
-    public void containsAPurchasedItem() {
+    public void contains() {
         try {
             Pantry pantry = new Pantry();
             Item cheerios = new Item("cheerios");
@@ -29,7 +31,7 @@ public class APantry {
     }
 
     @Test
-    public void doesNotContainItemNotPurchased() {
+    public void containsFalse() {
         try {
             Pantry pantry = new Pantry();
             Item cheerios = new Item("cheerios");
@@ -42,15 +44,11 @@ public class APantry {
     }
 
     @Test
-    public void countOfItemNotPurchasedIsZero() {
-        Pantry pantry = new Pantry();
-        assertThat(pantry.count("sugar"), is(equalTo(0)));
-    }
-
-    @Test
-    public void answersCountOfItemsPurchasedByName() {
+    public void count() {
         try {
             Pantry pantry = new Pantry();
+            assertThat(pantry.count("sugar"), is(equalTo(0)));
+
             pantry.purchase(new Item("sugar"));
             pantry.purchase(new Item("cheerios"));
             pantry.purchase(new Item("cheerios"));
@@ -61,7 +59,7 @@ public class APantry {
     }
 
     @Test
-    public void answersCountOfAllItemsPurchased() {
+    public void countAllItems() {
         try {
             Pantry pantry = new Pantry();
             pantry.purchase(new Item("sugar"));
@@ -75,7 +73,7 @@ public class APantry {
     }
 
     @Test
-    public void retainsItemDetails() {
+    public void getItem() {
         try {
             Pantry pantry = new Pantry();
             Item sugar = new Item("sugar");
@@ -90,7 +88,7 @@ public class APantry {
     }
 
     @Test
-    public void attachesDateToThePurchase() {
+    public void dt() {
         try {
             LocalDateTime todayAtNoon = LocalDate.now().atTime(12, 0, 0);
             Instant todayNoonUTC = todayAtNoon.toInstant(ZoneOffset.UTC);
@@ -109,13 +107,13 @@ public class APantry {
     }
 
     @Test
-    public void returnsNullWhenRetrieveByItemNameFindsNothing() {
+    public void nullGetItem() {
         Pantry pantry = new Pantry();
         assertThat(pantry.getItemNamed("did not purchase"), is(nullValue()));
     }
 
     @Test
-    public void throwsOnPurchaseOfNullItem() {
+    public void purchaseNull() {
         try {
             Pantry pantry = new Pantry();
             pantry.purchase(null);
@@ -127,7 +125,7 @@ public class APantry {
     }
 
     @Test
-    public void retrievesAllItemsWithMatchingName() {
+    public void getNamed() {
         try {
             Pantry pantry = new Pantry();
             Item smallCoffee = new Item("coffee");
@@ -147,7 +145,7 @@ public class APantry {
     }
 
     @Test
-    public void listsItemsExpiringToday() {
+    public void expieringToday() {
         try {
             Pantry pantry = new Pantry();
             LocalDate today = LocalDate.now();
@@ -159,21 +157,26 @@ public class APantry {
             item2.setExpirationDate(today.plusDays(1));
             pantry.purchase(item2);
             List<Item> items = pantry.getItemsExpiringToday();
-            assertThat(items.stream().map(Item::getName).collect(toList()),
-                    equalTo(singletonList("milk")));
+            List<String> actualItemNames = new ArrayList<>();
+            for (Item i: items) {
+                actualItemNames.add(i.getName());
+            }
+            List<String> expectedItemNames = new ArrayList<>();
+            expectedItemNames.add("milk");
+            assertThat(actualItemNames,
+                    equalTo(expectedItemNames));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
         }
     }
 
     @Test
-    public void throwsWhenAddingTooManyItems() {
+    public void tooMany() {
         Pantry pantry = new Pantry();
         for (int i = 0; i < 512; i++) {
             Item item = new Item();
             pantry.purchase(item);
         }
-
         try {
             Item item = new Item();
             pantry.purchase(item);
