@@ -8,7 +8,6 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertThat;
 
 public class AnItemRetrieverWithSpecificApiPropertyKey {
-    static final String SOME_API_KEY = "SOME_API_KEY";
     String currentApiKey;
 
     @Before
@@ -24,11 +23,12 @@ public class AnItemRetrieverWithSpecificApiPropertyKey {
 
     @Test
     public void constructsUrlUsingSystemPropertyForApiKey() {
-        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, SOME_API_KEY);
+        String someApiKey = "SOME_API_KEY";
+        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, someApiKey);
         ItemRetriever retriever = new ItemRetriever(null);
 
         String url = retriever.url("123");
 
-        assertThat(url, endsWith(SOME_API_KEY + "/123"));
+        assertThat(url, endsWith(someApiKey + "/123"));
     }
 }
