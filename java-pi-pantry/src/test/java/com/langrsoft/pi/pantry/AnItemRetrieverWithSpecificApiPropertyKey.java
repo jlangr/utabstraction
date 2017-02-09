@@ -12,19 +12,19 @@ public class AnItemRetrieverWithSpecificApiPropertyKey {
     String currentApiKey;
 
     @Before
-    public void setApiKey() {
+    public void saveCurrentApiKey() {
         currentApiKey = System.getProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME);
-        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, SOME_API_KEY);
     }
 
     @After
-    public void resetApiKey() {
+    public void resetCurrentApiKeyToSaved() {
         if (currentApiKey != null)
             System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey);
     }
 
     @Test
     public void constructsUrlUsingSystemPropertyForApiKey() {
+        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, SOME_API_KEY);
         ItemRetriever retriever = new ItemRetriever(null);
 
         String url = retriever.url("123");

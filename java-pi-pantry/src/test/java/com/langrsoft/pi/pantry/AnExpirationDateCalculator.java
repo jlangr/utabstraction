@@ -11,12 +11,11 @@ import static org.junit.Assert.assertThat;
 
 public class AnExpirationDateCalculator {
     static final LocalDate TODAY = LocalDate.now();
-    private ExpirationDataCalculator calculator;
-    private ShelfLifeRepository data;
+    ExpirationDataCalculator calculator;
+    ShelfLifeRepository data = new ShelfLifeRepository();
 
     @Before
     public void create() {
-        data = new ShelfLifeRepository();
         calculator = new ExpirationDataCalculator(data);
     }
 

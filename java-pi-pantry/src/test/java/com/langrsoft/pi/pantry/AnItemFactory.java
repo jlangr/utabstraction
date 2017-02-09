@@ -103,6 +103,6 @@ public class AnItemFactory {
 
         Item parsedItem = factory.create(emptyItemJson);
 
-        assertThat(parsedItem.getExpirationDate(), equalTo(LocalDate.MAX));
+        assertThat(parsedItem.getExpirationDate(), is(equalTo(LocalDate.MAX)));
     }
 }
