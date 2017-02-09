@@ -20,11 +20,11 @@ public class APantry {
     @Test
     public void contains() {
         try {
-            Pantry pantry = new Pantry();
-            Item cheerios = new Item("cheerios");
-            cheerios.setDescription("cereal");
-            pantry.purchase(cheerios);
-            assertThat(pantry.contains("cheerios"), equalTo(true));
+            Pantry p = new Pantry();
+            Item i1 = new Item("cheerios");
+            i1.setDescription("cereal");
+            p.purchase(i1);
+            assertThat(p.contains("cheerios"), equalTo(true));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
         }
@@ -46,13 +46,13 @@ public class APantry {
     @Test
     public void count() {
         try {
-            Pantry pantry = new Pantry();
-            assertThat(pantry.count("sugar"), is(equalTo(0)));
+            Pantry p = new Pantry();
+            assertThat(p.count("sugar"), is(equalTo(0)));
 
-            pantry.purchase(new Item("sugar"));
-            pantry.purchase(new Item("cheerios"));
-            pantry.purchase(new Item("cheerios"));
-            assertThat(pantry.count("cheerios"), is(equalTo(2)));
+            p.purchase(new Item("sugar"));
+            p.purchase(new Item("cheerios"));
+            p.purchase(new Item("cheerios"));
+            assertThat(p.count("cheerios"), is(equalTo(2)));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
         }
@@ -148,13 +148,13 @@ public class APantry {
     public void expieringToday() {
         try {
             Pantry pantry = new Pantry();
-            LocalDate today = LocalDate.now();
-            pantry.setClock(TestClock.fixedTo(today));
+            LocalDate d = LocalDate.now();
+            pantry.setClock(TestClock.fixedTo(d));
             Item item1 = new Item("milk");
-            item1.setExpirationDate(today);
+            item1.setExpirationDate(d);
             pantry.purchase(item1);
             Item item2 = new Item("ruby red lipstick");
-            item2.setExpirationDate(today.plusDays(1));
+            item2.setExpirationDate(d.plusDays(1));
             pantry.purchase(item2);
             List<Item> items = pantry.getItemsExpiringToday();
             List<String> actualItemNames = new ArrayList<>();
