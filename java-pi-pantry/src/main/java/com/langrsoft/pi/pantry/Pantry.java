@@ -8,14 +8,22 @@ import java.util.stream.Collectors;
 public class Pantry {
     private Map<String, List<Item>> items = new HashMap<>();
     private Clock clock = Clock.systemDefaultZone();
+    private static final int CAPACITY = 512;
 
     public void purchase(Item item) {
+        if (item == null) throw new IllegalArgumentException("item");
+        if (isAtCapacity()) throw new RuntimeException("too many items");
+
         item.setPurchaseDate(LocalDate.now(clock));
 
         List<Item> existingItems = getItemsNamed(item.getName());
         if (existingItems.isEmpty())
             items.put(item.getName(), existingItems);
         existingItems.add(item);
+    }
+
+    private boolean isAtCapacity() {
+        return count() == CAPACITY;
     }
 
     void setClock(Clock clock) {
@@ -34,6 +42,12 @@ public class Pantry {
 
     public int count(String name) {
         return getItemsNamed(name).size();
+    }
+
+    public int count() {
+        return (int) items.values().stream()
+                .flatMap(Collection::stream)
+                .count();
     }
 
     public Item getItemNamed(String name) {
