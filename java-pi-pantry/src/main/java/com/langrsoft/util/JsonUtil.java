@@ -5,13 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-// TODO add tests
-
 public class JsonUtil {
     public static <T> String toJson(T object) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(object);
+            return new ObjectMapper().writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new JsonParseException(e);
         }

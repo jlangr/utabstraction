@@ -19,15 +19,11 @@ public class ShelfLife {
         return refrigerated;
     }
 
-    public void setRefrigerated(int refrigerated) {
-        this.refrigerated = refrigerated;
-    }
-
     public int getFrozen() {
         return frozen;
     }
 
-    public void setFrozen(int frozen) {
-        this.frozen = frozen;
+    public int getUnopened() {
+        return unopened;
     }
 }
