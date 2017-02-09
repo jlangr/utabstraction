@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -81,7 +82,7 @@ public class APantry {
 
         List<Item> coffees = pantry.getItemsNamed("coffee");
 
-        assertThat(coffees.stream().map(coffee -> coffee.getDescription()).collect(toList()),
+        assertThat(coffees.stream().map(Item::getDescription).collect(toList()),
                 equalTo(asList("small", "large")));
     }
 
@@ -94,7 +95,7 @@ public class APantry {
 
         List<Item> items = pantry.getItemsExpiringToday();
 
-        assertThat(items.stream().map(item -> item.getName()).collect(toList()),
-                equalTo(asList("milk")));
+        assertThat(items.stream().map(Item::getName).collect(toList()),
+                equalTo(singletonList("milk")));
     }
 }

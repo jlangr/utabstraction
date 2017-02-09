@@ -28,7 +28,7 @@ public class Pantry {
 
     public List<Item> getItemsNamed(String name) {
         if (!contains(name))
-            return new ArrayList<Item>();
+            return new ArrayList<>();
         return items.get(name);
     }
 
@@ -43,7 +43,7 @@ public class Pantry {
 
     public List<Item> getItemsExpiringToday() {
         return items.values().stream()
-                .flatMap(c -> c.stream())
+                .flatMap(Collection::stream)
                 .filter(item -> item.getExpirationDate().isEqual(LocalDate.now(clock)))
                 .collect(Collectors.toList());
     }

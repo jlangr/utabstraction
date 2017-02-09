@@ -17,7 +17,7 @@ public class ExpirationDataCalculator {
         return getExpirationDate(shelfLifeData.get(item.getCategory()), item.getSellByDate());
     }
 
-    public LocalDate getExpirationDate(ShelfLife shelfLife, LocalDate sellByDate) {
+    private LocalDate getExpirationDate(ShelfLife shelfLife, LocalDate sellByDate) {
         return sellByDate.plusDays(shelfLife.getRefrigerated());
     }
 }

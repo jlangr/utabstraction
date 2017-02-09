@@ -19,7 +19,8 @@ public class AnItemRetrieverWithSpecificApiPropertyKey {
 
     @After
     public void resetApiKey() {
-        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey);
+        if (currentApiKey != null)
+            System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey);
     }
 
     @Test
