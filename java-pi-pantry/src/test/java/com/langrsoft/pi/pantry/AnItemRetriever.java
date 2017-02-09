@@ -1,9 +1,7 @@
 package com.langrsoft.pi.pantry;
 
 import com.langrsoft.util.HttpClient;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,21 +16,19 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AnItemRetriever {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
     @InjectMocks
-    ItemRetriever retriever;
+    ItemRetriever itemRetriever;
     @Mock
-    HttpClient client;
+    HttpClient httpClient;
 
     @Test
     public void parsesResponseJsonToItem() {
         String wheatiesUpc = "0016000275652";
         String responseText = toJson(new ItemBuilder("Wheaties").create());
-        when(client.retrieveText(matches("http://.*/json/.*/" + wheatiesUpc)))
+        when(httpClient.retrieveText(matches("http://.*/json/.*/" + wheatiesUpc)))
                 .thenReturn(responseText);
 
-        Item item = retriever.retrieve(wheatiesUpc);
+        Item item = itemRetriever.retrieve(wheatiesUpc);
 
         assertThat(item.getName(), is(equalTo(("Wheaties"))));
     }
