@@ -20,12 +20,7 @@ public class ItemRetriever {
     }
 
     public Item retrieve(String upcNumber) {
-        try {
-            String json = httpClient.retrieveText(url(upcNumber));
-            return itemFactory.create(json);
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String json = httpClient.retrieveText(url(upcNumber));
+        return itemFactory.create(json);
     }
 }

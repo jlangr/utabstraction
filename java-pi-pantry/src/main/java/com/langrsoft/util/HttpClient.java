@@ -9,28 +9,23 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 public class HttpClient {
-    private CloseableHttpClient httpClient;
-
-    public HttpClient(CloseableHttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-
-    public HttpClient() {
-        this(HttpClients.createDefault());
-    }
-
-    // TODO Live test
-    public String retrieveText(String url) throws IOException {
+    public String retrieveText(String url) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
         try {
-            HttpGet request = new HttpGet(url);
-            HttpResponse response = httpClient.execute(request);
-            return EntityUtils.toString(response.getEntity());
-        }
-        catch (IOException e) {
+            return get(url, httpClient);
+        } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        finally {
-            httpClient.close();
-        }
+    }
+
+    private String get(String url, CloseableHttpClient httpClient) throws IOException {
+        HttpResponse response = httpClient.execute(new HttpGet(url));
+        return EntityUtils.toString(response.getEntity());
     }
 }
