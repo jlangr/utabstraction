@@ -16,6 +16,11 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+/**
+ * // Tests for Pantry class
+ *
+ * author: I'll never tell
+ */
 public class APantry {
     @Test
     public void contains() {
@@ -50,12 +55,14 @@ public class APantry {
             assertThat(p.count("sugar"), is(equalTo(0)));
 
             p.purchase(new Item("sugar"));
+
             p.purchase(new Item("cheerios"));
             p.purchase(new Item("cheerios"));
             assertThat(p.count("cheerios"), is(equalTo(2)));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
         }
+
     }
 
     @Test
@@ -80,13 +87,18 @@ public class APantry {
             sugar.setDescription("refined sweetener");
             pantry.purchase(sugar);
             Item retrieved = pantry.getItemNamed("sugar");
-            assertThat(retrieved, is(not(nullValue())));
+            assertThat(retrieved, is(not(nullValue()))); // null?
             assertThat(retrieved.getDescription(), is(equalTo("refined sweetener")));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
         }
     }
 
+    /**
+     * dt
+     *
+     * ensure purchase date set to today
+     */
     @Test
     public void dt() {
         try {
@@ -94,6 +106,7 @@ public class APantry {
             Instant todayNoonUTC = todayAtNoon.toInstant(ZoneOffset.UTC);
             Clock clock = Clock.fixed(todayNoonUTC, ZoneOffset.UTC);
             Pantry pantry = new Pantry();
+            // inject fake clock
             pantry.setClock(clock);
             Item eggs = new Item("eggs");
             eggs.setDescription("oval ovum");
@@ -108,8 +121,8 @@ public class APantry {
 
     @Test
     public void nullGetItem() {
-        Pantry pantry = new Pantry();
-        assertThat(pantry.getItemNamed("did not purchase"), is(nullValue()));
+        Pantry pant = new Pantry();
+        assertThat(pant.getItemNamed("did not purchase"), is(nullValue()));
     }
 
     @Test
@@ -153,9 +166,11 @@ public class APantry {
             Item item1 = new Item("milk");
             item1.setExpirationDate(d);
             pantry.purchase(item1);
+            // add another item
             Item item2 = new Item("ruby red lipstick");
             item2.setExpirationDate(d.plusDays(1));
             pantry.purchase(item2);
+            // retrieve
             List<Item> items = pantry.getItemsExpiringToday();
             List<String> actualItemNames = new ArrayList<>();
             for (Item i: items) {
