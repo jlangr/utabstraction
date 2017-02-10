@@ -21,9 +21,9 @@ import static org.junit.Assert.fail;
  *
  * author: I'll never tell
  */
-public class APantry {
+public class PantryTest {
     @Test
-    public void contains() {
+    public void contains1() {
         try {
             Pantry p = new Pantry();
             Item i1 = new Item("cheerios");
@@ -35,8 +35,11 @@ public class APantry {
         }
     }
 
+    /**
+     * contains2
+     */
     @Test
-    public void containsFalse() {
+    public void contains2() {
         try {
             Pantry pantry = new Pantry();
             Item cheerios = new Item("cheerios");
@@ -48,6 +51,11 @@ public class APantry {
         }
     }
 
+    /**
+     * count2
+     *
+     * count of items by name
+     */
     @Test
     public void count() {
         try {
@@ -57,16 +65,23 @@ public class APantry {
             p.purchase(new Item("sugar"));
 
             p.purchase(new Item("cheerios"));
+
             p.purchase(new Item("cheerios"));
             assertThat(p.count("cheerios"), is(equalTo(2)));
+
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
         }
 
     }
 
+    /**
+     * count
+     *
+     * count of all items
+     */
     @Test
-    public void countAllItems() {
+    public void count2() {
         try {
             Pantry pantry = new Pantry();
             pantry.purchase(new Item("sugar"));
@@ -79,8 +94,13 @@ public class APantry {
         }
     }
 
+    /**
+     * dt
+     *
+     * ensure purchase date set to today
+     */
     @Test
-    public void getItem() {
+    public void get0() {
         try {
             Pantry pantry = new Pantry();
             Item sugar = new Item("sugar");
@@ -98,6 +118,7 @@ public class APantry {
      * dt
      *
      * ensure purchase date set to today
+     * uses the java clock class as a basis for the fake
      */
     @Test
     public void dt() {
@@ -120,7 +141,7 @@ public class APantry {
     }
 
     @Test
-    public void nullGetItem() {
+    public void get3() {
         Pantry pant = new Pantry();
         assertThat(pant.getItemNamed("did not purchase"), is(nullValue()));
     }
@@ -138,7 +159,7 @@ public class APantry {
     }
 
     @Test
-    public void getNamed() {
+    public void get2() {
         try {
             Pantry pantry = new Pantry();
             Item smallCoffee = new Item("coffee");
@@ -164,11 +185,13 @@ public class APantry {
             LocalDate d = LocalDate.now();
             pantry.setClock(TestClock.fixedTo(d));
             Item item1 = new Item("milk");
+            item1.setCategory("milk");
             item1.setExpirationDate(d);
             pantry.purchase(item1);
             // add another item
-            Item item2 = new Item("ruby red lipstick");
+            Item item2 = new Item("blood orange juice 24oz");
             item2.setExpirationDate(d.plusDays(1));
+            item2.setCategory("orange juice");
             pantry.purchase(item2);
             // retrieve
             List<Item> items = pantry.getItemsExpiringToday();

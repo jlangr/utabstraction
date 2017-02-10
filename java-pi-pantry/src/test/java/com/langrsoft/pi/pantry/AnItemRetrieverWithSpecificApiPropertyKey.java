@@ -23,12 +23,11 @@ public class AnItemRetrieverWithSpecificApiPropertyKey {
 
     @Test
     public void constructsUrlUsingSystemPropertyForApiKey() {
-        String someApiKey = "SOME_API_KEY";
-        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, someApiKey);
+        System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "SOME_API_KEY");
         ItemRetriever retriever = new ItemRetriever(null);
 
         String url = retriever.url("123");
 
-        assertThat(url, endsWith(someApiKey + "/123"));
+        assertThat(url, endsWith("SOME_API_KEY/123"));
     }
 }
