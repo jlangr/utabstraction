@@ -1,18 +1,21 @@
 package com.langrsoft.pi.pantry;
 
+import com.google.common.collect.ImmutableList;
 import com.langrsoft.util.TestClock;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -199,12 +202,49 @@ public class PantryTest {
             for (Item i: items) {
                 actualItemNames.add(i.getName());
             }
+            System.out.println("actual item names:" + actualItemNames);
             List<String> expectedItemNames = new ArrayList<>();
             expectedItemNames.add("milk");
             assertThat(actualItemNames,
                     equalTo(expectedItemNames));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
+        }
+    }
+
+    @Test
+    public void allExpiredItems() {
+        try {
+            Pantry pantry = new Pantry();
+            LocalDate d = LocalDate.now();
+            pantry.setClock(TestClock.fixedTo(d));
+            Item item1 = new Item("milk");
+            item1.setCategory("milk");
+            item1.setExpirationDate(d);
+            pantry.purchase(item1);
+            // add another item
+            Item item2 = new Item("blood orange juice 24oz");
+            item2.setExpirationDate(d.plusDays(1));
+            item2.setCategory("orange juice");
+            pantry.purchase(item2);
+            String name = "curdled milk";
+            Item item3= new Item(name);
+            item3.setExpirationDate(d.minusDays(1));
+            item1.setCategory("milk");
+            pantry.purchase(item3);
+            // retrieve
+            List<Item> items = pantry.getAllExpiredItems();
+            List<String> actualItemNames = new ArrayList<>();
+            for (Item i : items) {
+                actualItemNames.add(i.getName());
+            }
+            List<String> expectedItemNames = new ArrayList<>();
+            expectedItemNames.add(name);
+            expectedItemNames.add("milk");
+            assertThat(actualItemNames, containsInAnyOrder("milk", "curdled milk"));
+        }
+        catch (Exception e) {
+            fail(e.getMessage());
         }
     }
 

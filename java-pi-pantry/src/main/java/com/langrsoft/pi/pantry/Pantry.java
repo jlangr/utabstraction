@@ -3,7 +3,9 @@ package com.langrsoft.pi.pantry;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Pantry {
     private Map<String, List<Item>> items = new HashMap<>();
@@ -16,6 +18,10 @@ public class Pantry {
 
         item.setPurchaseDate(LocalDate.now(clock));
 
+        addItem(item);
+    }
+
+    private void addItem(Item item) {
         List<Item> existingItems = getItemsNamed(item.getName());
         if (existingItems.isEmpty())
             items.put(item.getName(), existingItems);
@@ -45,9 +51,7 @@ public class Pantry {
     }
 
     public int count() {
-        return (int) items.values().stream()
-                .flatMap(Collection::stream)
-                .count();
+        return (int) flatten(items.values()).count();
     }
 
     public Item getItemNamed(String name) {
@@ -56,9 +60,22 @@ public class Pantry {
     }
 
     public List<Item> getItemsExpiringToday() {
-        return items.values().stream()
-                .flatMap(Collection::stream)
-                .filter(item -> item.getExpirationDate().isEqual(LocalDate.now(clock)))
+        return filterFlattened(items.values(),
+                item -> item.getExpirationDate().isEqual(LocalDate.now(clock)));
+    }
+
+    public List<Item> getAllExpiredItems() {
+        return filterFlattened(items.values(),
+                item -> !item.getExpirationDate().isAfter(LocalDate.now(clock)));
+    }
+
+    private <T> List<T> filterFlattened(Collection<List<T>> values, Predicate<T> predicate) {
+        return flatten(values)
+                .filter(predicate)
                 .collect(Collectors.toList());
+    }
+
+    private <T> Stream<T> flatten(Collection<List<T>> values) {
+        return values.stream().flatMap(Collection::stream);
     }
 }
