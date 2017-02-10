@@ -15,6 +15,6 @@ See how long it takes you to spot the nasty test class that we'll be shaping up.
 
 Good to go! Feel free to clone, but realize that you might need to pull prior to my talk.
 
-## C#
+## C\#
 
 NOTE WELL: *As long as you see this comment, the source here is not ready for downloading--it is a work in progress.* Now that the Java version looks good, I will produce a C# equivalent; figure on sometime by the end of February 17. Or Feb 24 at the latest.
