@@ -13,10 +13,10 @@ namespace Pipantry.Domain {
                 return item.ExpirationDate;
             if (item.Category == null)
                 return DateTime.MaxValue;
-            return getExpirationDate(shelfLifeData.get(item.Category), item.SellByDate);
+            return ExpirationDate(shelfLifeData.get(item.Category), item.SellByDate);
         }
 
-        private DateTime getExpirationDate(ShelfLife shelfLife, DateTime sellByDate) {
+        private DateTime ExpirationDate(ShelfLife shelfLife, DateTime sellByDate) {
             return sellByDate.AddDays(shelfLife.Refrigerated);
         }
     }

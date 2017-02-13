@@ -25,7 +25,7 @@ namespace Pipantry.Domain {
         }
 
         private void Add(Item item) {
-            IList<Item> existingItems = ItemsNamed(item.Name).ToList();
+            var existingItems = ItemsNamed(item.Name).ToList();
             if (!existingItems.Any())
                 items[item.Name] = existingItems;
             existingItems.Add(item);

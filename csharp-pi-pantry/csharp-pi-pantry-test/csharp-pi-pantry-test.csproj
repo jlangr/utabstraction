@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,7 +44,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainTests\AnExpirationDateCalculator.cs" />
+    <Compile Include="DomainTests\AnItemFactory.cs" />
+    <Compile Include="DomainTests\AnItemRetriever.cs" />
+    <Compile Include="DomainTests\AnItemRetrieverWithLiveApi.cs" />
+    <Compile Include="DomainTests\AnItemRetrieverWithSpecificApiPropertyKey.cs" />
+    <Compile Include="DomainTests\AShelfLifeRepository.cs" />
+    <Compile Include="DomainTests\ItemBuilder.cs" />
+    <Compile Include="DomainTests\PantryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestUtil\Slow.cs" />
+    <Compile Include="UtilTests\AnHttpClient.cs" />
+    <Compile Include="UtilTests\JSonUtilParse.cs" />
+    <Compile Include="UtilTests\JSonUtilToJson.cs" />
+    <Compile Include="UtilTests\TestClock.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

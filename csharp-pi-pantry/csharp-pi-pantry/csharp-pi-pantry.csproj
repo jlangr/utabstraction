@@ -49,6 +49,8 @@
     <Compile Include="Domain\ShelfLifeRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\HttpClient.cs" />
+    <Compile Include="Util\DateTimeWrapper.cs" />
+    <Compile Include="Util\IDateTime.cs" />
     <Compile Include="Util\JsonParseException.cs" />
     <Compile Include="Util\JsonUtil.cs" />
   </ItemGroup>
