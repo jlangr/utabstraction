@@ -12,7 +12,7 @@ namespace Test.Pipantry.Domain
         private ItemFactory factory = new ItemFactory();
 
         [Test]
-        public void populatesItemFromJson()
+        public void PopulatesItemFromJson()
         {
             var responseBody = "{\"valid\":\"true\","
                                   + "\"number\":\"0016000275645\","
@@ -30,9 +30,9 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void assignsNameToSourceName()
+        public void AssignsNameToSourceName()
         {
-            string serverItemJson = JsonUtil.ToJson(new ItemBuilder("Cheerios").withSourceName("xxx").create());
+            string serverItemJson = JsonUtil.ToJson(new ItemBuilder("Cheerios").withSourceName("xxx").Create());
 
             var item = factory.Create(serverItemJson);
 
@@ -40,9 +40,9 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void replacesNameUsingLookupTable()
+        public void ReplacesNameUsingLookupTable()
         {
-            string serverItemJson = JsonUtil.ToJson(new ItemBuilder("Wheaties 40oz").withNumber("999").create());
+            string serverItemJson = JsonUtil.ToJson(new ItemBuilder("Wheaties 40oz").withNumber("999").Create());
             var numbersToLocalNames = new Dictionary<string, string>();
             numbersToLocalNames["999"] = "Wheaties";
             factory.setNumberToLocalNameMappings(numbersToLocalNames);
@@ -54,13 +54,13 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void throwsARuntimeExceptionOnParseFailure()
+        public void ThrowsARuntimeExceptionOnParseFailure()
         {
             Assert.Throws<JsonParseException>(() => factory.Create("BAD BAD JSON!"));
         }
 
         [Test]
-        public void defaultsSellByDateToPurchaseDate()
+        public void DefaultsSellByDateToPurchaseDate()
         {
             //var now = DateTime.now();
             //factory.setClock(TestClock.fixedTo(now));
@@ -71,10 +71,10 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void defaultsCategoryToNameIfRecognized()
+        public void DefaultsCategoryToNameIfRecognized()
         {
             Assert.That(new ShelfLifeRepository().ContainsKey("milk"), Is.True);
-            var itemJson = JsonUtil.ToJson(new ItemBuilder("milk").create());
+            var itemJson = JsonUtil.ToJson(new ItemBuilder("milk").Create());
 
             var parsedItem = factory.Create(itemJson);
 
@@ -82,9 +82,9 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void defaultsCategoryToNullWhenNotRecognized()
+        public void DefaultsCategoryToNullWhenNotRecognized()
         {
-            var itemJson = JsonUtil.ToJson(new ItemBuilder("nonexistent category").create());
+            var itemJson = JsonUtil.ToJson(new ItemBuilder("nonexistent category").Create());
 
             var parsedItem = factory.Create(itemJson);
 
@@ -92,7 +92,7 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void defaultsExpirationDateToIndefinite()
+        public void DefaultsExpirationDateToIndefinite()
         {
             var emptyItemJson = JsonUtil.ToJson(new Item());
 

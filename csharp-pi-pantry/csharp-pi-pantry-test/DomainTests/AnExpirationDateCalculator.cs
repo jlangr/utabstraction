@@ -12,15 +12,15 @@ namespace Test.Pipantry.Domain
         ShelfLifeRepository data = new ShelfLifeRepository();
 
         [SetUp]
-        public void create()
+        public void Create()
         {
             calculator = new ExpirationDataCalculator(data);
         }
 
         [Test]
-        public void returnsItemExpirationDateWhenSet()
+        public void ReturnsItemExpirationDateWhenSet()
         {
-            var item = new ItemBuilder("").withExpirationDate(Today).create();
+            var item = new ItemBuilder("").withExpirationDate(Today).Create();
 
             var expiration = calculator.ExpirationDate(item);
 
@@ -28,16 +28,16 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void returnsIndefiniteWhenNeitherExpirationNorCategorySet()
+        public void ReturnsIndefiniteWhenNeitherExpirationNorCategorySet()
         {
             Assert.That(calculator.ExpirationDate(new Item()), Is.EqualTo(DateTime.MaxValue));
         }
 
         [Test]
-        public void calculatesUsingShelfLifeAndSellByDate()
+        public void CalculatesUsingShelfLifeAndSellByDate()
         {
             data.add("smelt", new ShelfLife { Refrigerated = 10 });
-            var item = new ItemBuilder("").withCategory("smelt").withSellByDate(Today).create();
+            var item = new ItemBuilder("").withCategory("smelt").withSellByDate(Today).Create();
 
             var expiration = calculator.ExpirationDate(item);
 

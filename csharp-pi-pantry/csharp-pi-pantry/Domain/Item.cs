@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 namespace Pipantry.Domain
@@ -17,13 +18,21 @@ namespace Pipantry.Domain
         //@JsonProperty("rate_down") private int rateDown;
         //private string number;
 
+        [JsonProperty("number")]
         public string Number { get; set; }
+        [JsonProperty("alias")]
         public string Alias { get; set; }
+        [JsonProperty("itemname")]
         public string Name { get; set; }
+        [JsonProperty("description")]
         public string Description { get; set; }
-        public bool isValid { get; set; }
+        [JsonProperty("valid")]
+        public bool IsValid { get; set; }
+        [JsonProperty("avg_price")]
         public string AveragePrice { get; set; }
+        [JsonProperty("rate_up")]
         public int RateUp { get; set; }
+        [JsonProperty("rate_down")]
         public int RateDown { get; set; }
 
         // custom

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Pipantry.Domain;
 using Pipantry.Util;
@@ -6,23 +7,23 @@ namespace Test.Pipantry.Util
 {
     public class JSonUtilParse
     {
-        class X
+        public class X
         {
-            public int y;
+            public int Y { get; set; }
         }
 
         [Test]
-        public void createsInstanceOfClassFromJson()
+        public void CreatesInstanceOfClassFromJson()
         {
-            X x = JsonUtil.Parse<X>("{\"y\": 42}", typeof(X));
+            X x = JsonUtil.Parse<X>("{\"Y\": 42}", typeof(X));
 
-            Assert.That(x.y, Is.EqualTo(42));
+            Assert.That(x.Y, Is.EqualTo(42));
         }
 
         [Test]
-        public void throwsRuntimeExceptionOnJsonParseException()
+        public void ThrowsRuntimeExceptionOnJsonParseException()
         {
-            Assert.Throws<JsonParseException>(() => JsonUtil.Parse<X>("?", typeof(X)));
+            Assert.Throws<JsonParseException>(() => JsonUtil.Parse<X>("{\"Y\": \"not an int\"}", typeof(X)));
         }
     }
 }

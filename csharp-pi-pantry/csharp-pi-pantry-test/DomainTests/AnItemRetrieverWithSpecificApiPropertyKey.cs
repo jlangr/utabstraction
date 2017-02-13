@@ -8,19 +8,19 @@ namespace Test.Pipantry.Domain
         string currentApiKey;
 
         [SetUp]
-        public void saveCurrentApiKey() {
+        public void SaveCurrentApiKey() {
             //currentApiKey = System.getProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME);
         }
 
         [TearDown]
-        public void resetCurrentApiKeyToSaved() {
+        public void ResetCurrentApiKeyToSaved() {
             if (currentApiKey != null)
                 //System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey)
                 ;
         }
 
         [Test]
-        public void constructsUrlUsingSystemPropertyForApiKey() {
+        public void ConstructsUrlUsingSystemPropertyForApiKey() {
             //System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "SOME_API_KEY");
             var retriever = new ItemRetriever(null);
 

@@ -1,29 +1,29 @@
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+
 namespace Pipantry.Util
 {
-    public class HttpClient
+    public class Http
     {
-        public string RetrieveText(string url)
+        virtual public string RetrieveText(string url)
         {
-            return null;
-            //CloseableHttpClient httpClient = HttpClients.createDefault();
-            //try {
-            //    return get(url, httpClient);
-            //} catch (IOException e) {
-            //    throw new RuntimeException(e);
-            //} finally {
-            //    try {
-            //        httpClient.close();
-            //    } catch (IOException e) {
-            //        throw new RuntimeException(e);
-            //    }
-            //}
+            return RetrieveText(url,
+                status => { throw new ApplicationException($"http get failed: {status}"); });
         }
 
-        private string get(string url, /* CloseableHttpClient */ object httpClient)
+        virtual public string RetrieveText(string url, Func<HttpStatusCode, string> errorHandler)
         {
-            //    HttpResponse response = httpClient.execute(new HttpGet(url));
-            //return EntityUtils.toString(response.getEntity());
-            return null;
+            HttpResponseMessage response = null;
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            response = client.GetAsync(url).Result;
+            if (response.IsSuccessStatusCode)
+                return response.Content.ReadAsStringAsync().Result;
+            return errorHandler.Invoke(response.StatusCode);
         }
     }
 }

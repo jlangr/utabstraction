@@ -9,11 +9,11 @@ namespace Pipantry.Domain {
         }
 
         public DateTime ExpirationDate(Item item) {
-            if (item.ExpirationDate != null)
+            if (item.ExpirationDate != DateTime.MinValue)
                 return item.ExpirationDate;
             if (item.Category == null)
                 return DateTime.MaxValue;
-            return ExpirationDate(shelfLifeData.Get(item.Category), item.SellByDate);
+            return ExpirationDate(shelfLifeData[item.Category], item.SellByDate);
         }
 
         private DateTime ExpirationDate(ShelfLife shelfLife, DateTime sellByDate) {

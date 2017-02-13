@@ -1,24 +1,35 @@
 using NUnit.Framework;
 using Pipantry.Domain;
 using Pipantry.Util;
+using System;
 
 namespace Test.Pipantry.Util
 {
     public class JSonUtilToJson
     {
-        [Test]
-        public void convertsObjectToString()
+        class SomeClass
         {
-            object obj = null;
-            //new object() { public int x = 42; });
-            Assert.That(JsonUtil.ToJson(obj),
-                Is.EqualTo("{\"x\":42}"));
+            public SomeClass() { X = 42; }
+            public int X { get; }
         }
 
         [Test]
-        public void throwsRuntimeExceptionOnJsonProcessingException()
+        public void ConvertsObjectToString()
         {
-            Assert.Throws<JsonParseException>(() => JsonUtil.ToJson(new object()));
+            Assert.That(JsonUtil.ToJson(new SomeClass()),
+                Is.EqualTo("{\"X\":42}"));
+        }
+
+        class CannotSerialize
+        {
+            public int X { get { throw new ApplicationException(); } }
+        }
+
+        // TODO under what condition does converting to JSON fail?
+        [Test]
+        public void ThrowsRuntimeExceptionOnJsonProcessingException()
+        {
+            Assert.Throws<JsonParseException>(() => JsonUtil.ToJson(new CannotSerialize()));
         }
     }
 }

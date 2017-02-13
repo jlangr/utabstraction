@@ -9,17 +9,17 @@ namespace Test.Pipantry.Domain
         ShelfLifeRepository repo = new ShelfLifeRepository();
 
         [Test]
-        public void containsExistingValuesForKnownCategories()
+        public void ContainsExistingValuesForKnownCategories()
         {
             Assert.That(repo.ContainsKey("water"), Is.True);
         }
 
         [Test]
-        public void allowsStoringShelfLifeInfoForNewCategories()
+        public void AllowsStoringShelfLifeInfoForNewCategories()
         {
             repo.add("goop", new ShelfLife { Refrigerated = 42 });
 
-            Assert.That(repo.Get("goop").Refrigerated, Is.EqualTo(42));
+            Assert.That(repo["goop"].Refrigerated, Is.EqualTo(42));
         }
     }
 }

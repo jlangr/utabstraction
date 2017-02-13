@@ -20,7 +20,7 @@ namespace Test.Pipantry.Domain
             this.name = name;
         }
 
-        public Item create()
+        public Item Create()
         {
             var item = new Item(name);
             item.Description = description;

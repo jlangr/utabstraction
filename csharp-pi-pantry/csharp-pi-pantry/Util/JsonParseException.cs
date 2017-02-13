@@ -1,8 +1,8 @@
 using System;
 
 namespace Pipantry.Domain {
-    public class JsonParseException : ApplicationException {
-        public JsonParseException(ApplicationException e)
+    public class JsonParseException : Exception {
+        public JsonParseException(Exception e)
             : base("", e)
         {
         }

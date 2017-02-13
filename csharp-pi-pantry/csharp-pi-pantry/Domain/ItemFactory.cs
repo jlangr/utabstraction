@@ -29,13 +29,15 @@ namespace Pipantry.Domain
 
         private void ChangeCategoryIfRecognized(Item item)
         {
-            if (shelfLifeData.ContainsKey(item.Name))
+            // TODO write test for name null
+            if (item.Name != null && shelfLifeData.ContainsKey(item.Name))
                 item.Category = item.Name;
         }
 
         private void ChangeNameIfLocalMappingExists(Item item)
         {
-            if (numberToLocalNameMappings.ContainsKey(item.Number))
+            /// TODO test
+            if (item.Number != null && numberToLocalNameMappings.ContainsKey(item.Number))
                 item.Name = numberToLocalNameMappings[item.Number];
         }
 

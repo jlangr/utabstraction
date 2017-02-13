@@ -3,8 +3,7 @@ using System.Collections.Generic;
 namespace Pipantry.Domain {
     // based on http://site.foodshare.org/site/DocServer/Food_Storage_and_Shelf_Life_Guidelines.pdf?docID=5822
     public class ShelfLifeRepository {
-        private IDictionary<string, ShelfLife> shelfLifeByCategory = new Dictionary<string, ShelfLife>();
-        private IDictionary<string, ShelfLife> data = new Dictionary<string, ShelfLife>
+        private IDictionary<string, ShelfLife> shelfLifeByCategory = new Dictionary<string, ShelfLife>
         {
             { "shredded high moisture cheese", new ShelfLife { Refrigerated = 21, Frozen = 180 } },
             { "shredded low moisture cheese", new ShelfLife { Refrigerated = 30, Frozen = 180 } },
@@ -139,12 +138,17 @@ namespace Pipantry.Domain {
         };
 
         public bool ContainsKey(string category) {
+            // TODO need? test?
+            //if (category == null) return false;
             return shelfLifeByCategory.ContainsKey(category);
         }
 
-        // operator overload []
-        public ShelfLife Get(string category) {
-            return shelfLifeByCategory[category];
+        public ShelfLife this[string category]
+        {
+            get
+            {
+                return shelfLifeByCategory[category];
+            }
         }
 
         public void add(string category, ShelfLife shelfLife) {
