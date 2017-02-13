@@ -5,19 +5,17 @@ using System;
 
 namespace Test.Pipantry.Domain
 {
-    [TestFixture]
+    [TestFixture, Category("slow")]
     public class AnItemRetrieverWithLiveApi
     {
-        //[Ignore("cannot run without valid API key set in property")]
-        //@Category(Slow.class)
-        [Test]
-        public void RetrievesItemInformationViaLiveHttpGet()
-        {
-            Environment.SetEnvironmentVariable(
-                ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "a6f99f4c683845042ae27bbf3e36aeee");
-            var retriever = new ItemRetriever(new Http());
-            var item = retriever.Retrieve("0016000275652");
-            Assert.That(item.Name, Does.StartWith("Wheaties"));
-        }
+        //[Ignore("cannot run with valid API key set")]
+        //[Test]
+        //public void RetrievesItemInformationViaLiveHttpGet()
+        //{
+        //    Environment.SetEnvironmentVariable(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "???");
+        //    var retriever = new ItemRetriever(new Http());
+        //    var item = retriever.Retrieve("0016000275652");
+        //    Assert.That(item.Name, Does.StartWith("Wheaties"));
+        //}
     }
 }

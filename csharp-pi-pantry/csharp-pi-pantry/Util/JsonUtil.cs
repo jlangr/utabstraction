@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using Pipantry.Domain;
-using System;
 
 namespace Pipantry.Util
 {
@@ -18,7 +17,7 @@ namespace Pipantry.Util
             }
         }
 
-        public static T Parse<T>(string json, Type type)
+        public static T Parse<T>(string json)
         {
             try
             {

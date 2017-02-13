@@ -18,8 +18,7 @@ namespace Pipantry.Domain
 
         public Item Create(string json)
         {
-            // TODO can this simplify
-            var item = JsonUtil.Parse<Item>(json, typeof(Item));
+            var item = JsonUtil.Parse<Item>(json);
             item.SourceName = item.Name;
             item.ExpirationDate = DateTime.MaxValue;
             item.SellByDate = DateTimeProvider.Now;
@@ -30,14 +29,12 @@ namespace Pipantry.Domain
 
         private void ChangeCategoryIfRecognized(Item item)
         {
-            // TODO write test for name null
             if (item.Name != null && shelfLifeData.ContainsKey(item.Name))
                 item.Category = item.Name;
         }
 
         private void ChangeNameIfLocalMappingExists(Item item)
         {
-            /// TODO test
             if (item.Number != null && numberToLocalNameMappings.ContainsKey(item.Number))
                 item.Name = numberToLocalNameMappings[item.Number];
         }

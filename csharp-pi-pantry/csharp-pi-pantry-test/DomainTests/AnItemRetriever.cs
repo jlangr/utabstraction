@@ -21,8 +21,8 @@ namespace Test.Pipantry.Domain
         [Test]
         public void ParsesResponseJsonToItem()
         {
-            string wheatiesUpc = "0016000275652";
-            string responseText = JsonUtil.ToJson(new ItemBuilder("Wheaties").Create());
+            var wheatiesUpc = "0016000275652";
+            var responseText = JsonUtil.ToJson(new Item("Wheaties"));
 
             httpClient.Setup(client => client.RetrieveText(It.IsRegex("http://.*/json/.*/" + wheatiesUpc)))
                 .Returns(responseText);

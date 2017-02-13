@@ -20,7 +20,7 @@ namespace Test.Pipantry.Domain
         [Test]
         public void ReturnsItemExpirationDateWhenSet()
         {
-            var item = new ItemBuilder("").withExpirationDate(Today).Create();
+            var item = new Item("") { ExpirationDate = Today };
 
             var expiration = calculator.ExpirationDate(item);
 
@@ -37,7 +37,7 @@ namespace Test.Pipantry.Domain
         public void CalculatesUsingShelfLifeAndSellByDate()
         {
             data.add("smelt", new ShelfLife { Refrigerated = 10 });
-            var item = new ItemBuilder("").withCategory("smelt").withSellByDate(Today).Create();
+            var item = new Item("") { Category = "smelt", SellByDate = Today };
 
             var expiration = calculator.ExpirationDate(item);
 

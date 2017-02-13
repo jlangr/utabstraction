@@ -138,18 +138,10 @@ namespace Pipantry.Domain {
         };
 
         public bool ContainsKey(string category) {
-            // TODO need? test?
-            //if (category == null) return false;
             return shelfLifeByCategory.ContainsKey(category);
         }
 
-        public ShelfLife this[string category]
-        {
-            get
-            {
-                return shelfLifeByCategory[category];
-            }
-        }
+        public ShelfLife this[string category] { get { return shelfLifeByCategory[category]; } }
 
         public void add(string category, ShelfLife shelfLife) {
             shelfLifeByCategory[category] = shelfLife;

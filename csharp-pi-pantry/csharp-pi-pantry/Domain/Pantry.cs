@@ -55,7 +55,7 @@ namespace Pipantry.Domain {
 
         public Item ItemNamed(string name) {
             if (!Contains(name)) return null;
-            return ItemsNamed(name).FirstOrDefault(); // TODO Item?
+            return ItemsNamed(name).FirstOrDefault(); 
         }
 
         public IEnumerable<Item> ItemsExpiringToday() {

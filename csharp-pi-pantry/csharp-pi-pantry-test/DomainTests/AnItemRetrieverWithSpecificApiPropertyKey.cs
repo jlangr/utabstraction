@@ -19,18 +19,16 @@ namespace Test.Pipantry.Domain
         public void ResetCurrentApiKeyToSaved()
         {
             if (currentApiKey != null)
-                Environment.SetEnvironmentVariable(
-                    ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey);
+                Environment.SetEnvironmentVariable(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey);
         }
 
         [Test]
         public void ConstructsUrlUsingSystemPropertyForApiKey()
         {
-            Environment.SetEnvironmentVariable(
-                ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "SOME_API_KEY");
+            Environment.SetEnvironmentVariable(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "SOME_API_KEY");
             var retriever = new ItemRetriever(null);
 
-            string url = retriever.Url("123");
+            var url = retriever.Url("123");
 
             Assert.That(url, Does.EndWith("SOME_API_KEY/123"));
         }

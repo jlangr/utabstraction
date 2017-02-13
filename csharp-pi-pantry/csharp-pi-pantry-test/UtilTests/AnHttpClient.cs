@@ -4,8 +4,7 @@ using System;
 
 namespace Test.Pipantry.Util
 {
-    // TODO @Category(Slow.class)
-    [TestFixture]
+    [TestFixture, Category("slow")]
     public class AnHttpClient
     {
         const int TeapotStatus = 418;

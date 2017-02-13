@@ -15,7 +15,7 @@ namespace Test.Pipantry.Util
         [Test]
         public void CreatesInstanceOfClassFromJson()
         {
-            X x = JsonUtil.Parse<X>("{\"Y\": 42}", typeof(X));
+            X x = JsonUtil.Parse<X>("{\"Y\": 42}");
 
             Assert.That(x.Y, Is.EqualTo(42));
         }
@@ -23,7 +23,7 @@ namespace Test.Pipantry.Util
         [Test]
         public void ThrowsRuntimeExceptionOnJsonParseException()
         {
-            Assert.Throws<JsonParseException>(() => JsonUtil.Parse<X>("{\"Y\": \"not an int\"}", typeof(X)));
+            Assert.Throws<JsonParseException>(() => JsonUtil.Parse<X>("{\"Y\": \"not an int\"}"));
         }
     }
 }
