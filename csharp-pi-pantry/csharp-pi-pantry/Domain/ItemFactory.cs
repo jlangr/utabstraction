@@ -18,6 +18,7 @@ namespace Pipantry.Domain
 
         public Item Create(string json)
         {
+            // TODO can this simplify
             var item = JsonUtil.Parse<Item>(json, typeof(Item));
             item.SourceName = item.Name;
             item.ExpirationDate = DateTime.MaxValue;

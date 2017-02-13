@@ -8,16 +8,6 @@ namespace Pipantry.Domain
         public Item(string name) { Name = name; }
         public Item() { }
 
-        // see http://stackoverflow.com/questions/10519265/jackson-overcoming-underscores-in-favor-of-camel-case for alternatives
-        //@JsonProperty("valid") private boolean isValid;
-        //@JsonProperty("itemname") private String name;
-        //private string alias;
-        //private string description;
-        //@JsonProperty("avg_price") private string averagePrice;
-        //@JsonProperty("rate_up") private int rateUp;
-        //@JsonProperty("rate_down") private int rateDown;
-        //private string number;
-
         [JsonProperty("number")]
         public string Number { get; set; }
         [JsonProperty("alias")]

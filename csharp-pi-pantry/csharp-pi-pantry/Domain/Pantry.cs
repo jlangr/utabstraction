@@ -25,7 +25,7 @@ namespace Pipantry.Domain {
         }
 
         private void Add(Item item) {
-            var existingItems = ItemsNamed(item.Name).ToList();
+            var existingItems = ItemsNamed(item.Name);
             if (!existingItems.Any())
                 items[item.Name] = existingItems;
             existingItems.Add(item);
@@ -39,7 +39,7 @@ namespace Pipantry.Domain {
             return items.ContainsKey(name);
         }
 
-        public IEnumerable<Item> ItemsNamed(string name) {
+        public IList<Item> ItemsNamed(string name) {
             if (!Contains(name))
                 return new List<Item>();
             return items[name];

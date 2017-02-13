@@ -25,7 +25,6 @@ namespace Test.Pipantry.Util
             public int X { get { throw new ApplicationException(); } }
         }
 
-        // TODO under what condition does converting to JSON fail?
         [Test]
         public void ThrowsRuntimeExceptionOnJsonProcessingException()
         {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Pipantry.Domain;
 using System.Linq;
+using Moq;
+using Pipantry.Util;
 
 namespace Test.Pipantry.Domain
 {
@@ -15,7 +17,7 @@ namespace Test.Pipantry.Domain
     public class PantryTest
     {
         [Test]
-        public void contains1()
+        public void Contains1()
         {
             try
             {
@@ -35,7 +37,7 @@ namespace Test.Pipantry.Domain
          * contains2
          */
         [Test]
-        public void contains2()
+        public void Contains2()
         {
             try
             {
@@ -57,12 +59,12 @@ namespace Test.Pipantry.Domain
          * count of items by name
          */
         [Test]
-        public void count()
+        public void Count()
         {
             try
             {
                 var p = new Pantry();
-                Assert.That(p.Count("sugar"), Is.Zero);
+                //Assert.That(p.Count("sugar"), Is.Zero);
 
                 p.Purchase(new Item("sugar"));
 
@@ -76,7 +78,6 @@ namespace Test.Pipantry.Domain
             {
                 Assert.Fail("purchase Failed:" + e.Message);
             }
-
         }
 
         /**
@@ -85,7 +86,7 @@ namespace Test.Pipantry.Domain
          * count of all items
          */
         [Test]
-        public void count2()
+        public void Count2()
         {
             try
             {
@@ -108,7 +109,7 @@ namespace Test.Pipantry.Domain
          * ensure purchase date set to today
          */
         [Test]
-        public void get0()
+        public void Get0()
         {
             try
             {
@@ -130,26 +131,28 @@ namespace Test.Pipantry.Domain
          * dt
          *
          * ensure purchase date set to today
-         * uses the java clock class as a basis for the fake
+         * uses the the clock class as a basis for the fake
          */
         [Test]
-        public void dt()
+        public void Dt()
         {
             try
             {
-                // TODO
-                //DateTimeTime todayAtNoon = DateTime.now().atTime(12, 0, 0);
-                //Instant todayNoonUTC = todayAtNoon.toInstant(ZoneOffset.UTC);
-                //Clock clock = Clock.fixed (todayNoonUTC, ZoneOffset.UTC);
+                DateTime now = DateTime.Now;
+                DateTime todayAtNoon = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
                 var pantry = new Pantry();
+                var mock = new Mock<IDateTime>();
+                mock.Setup(p => p.Now).Returns(todayAtNoon);
+
                 // inject fake clock
-//pantry.setClock(clock);
+                pantry.DateTimeProvider = mock.Object;
+
                 var eggs = new Item("eggs");
                 eggs.Description = "oval ovum";
                 pantry.Purchase(eggs);
                 var retrieved = pantry.ItemNamed("eggs");
                 Assert.That(retrieved, Is.Not.Null);
-                Assert.That(retrieved.PurchaseDate, Is.EqualTo(DateTime.Now));
+                Assert.That(retrieved.PurchaseDate, Is.EqualTo(todayAtNoon));
             }
             catch (ArgumentException e)
             {
@@ -158,14 +161,14 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void get3()
+        public void Get3()
         {
             var pant = new Pantry();
             Assert.That(pant.ItemNamed("did not purchase"), Is.Null);
         }
 
         [Test]
-        public void purchaseNull()
+        public void PurchaseNull()
         {
             try
             {
@@ -181,7 +184,7 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void get2()
+        public void Get2()
         {
             try
             {
@@ -205,20 +208,26 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void expieringToday()
+        public void ExpieringToday()
         {
             try
             {
                 var pantry = new Pantry();
-                var d = DateTime.Now;
-//pantry.setClock(TestClock.fixedTo(d));
+                var now = DateTime.Now;
+
+                var mock = new Mock<IDateTime>();
+                mock.Setup(p => p.Now).Returns(now);
+
+                // inject fake clock
+                pantry.DateTimeProvider = mock.Object;
+
                 var item1 = new Item("milk");
                 item1.Category = "milk";
-                item1.ExpirationDate = d;
+                item1.ExpirationDate = now;
                 pantry.Purchase(item1);
                 // add another item
                 var item2 = new Item("blood orange juice 24oz");
-                item2.ExpirationDate = d.AddDays(1);
+                item2.ExpirationDate = now.AddDays(1);
                 item2.Category = "orange juice";
                 pantry.Purchase(item2);
                 // retrieve
@@ -241,7 +250,7 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void allExpiredItems()
+        public void AllExpiredItems()
         {
             try
             {
@@ -281,17 +290,17 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void tooMany()
+        public void TooMany()
         {
             var pantry = new Pantry();
-            for (int i = 0; i < 512; i++)
+            for (var i = 0; i < 512; i++)
             {
-                var item = new Item();
+                var item = new Item("");
                 pantry.Purchase(item);
             }
             try
             {
-                var item = new Item();
+                var item = new Item("");
                 pantry.Purchase(item);
                 Assert.Fail("expected exception");
             }

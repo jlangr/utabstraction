@@ -1,27 +1,33 @@
 using NUnit.Framework;
 using Pipantry.Domain;
+using System;
 
 namespace Test.Pipantry.Domain
 {
     [TestFixture]
-    public class AnItemRetrieverWithSpecificApiPropertyKey {
+    public class AnItemRetrieverWithSpecificApiPropertyKey
+    {
         string currentApiKey;
 
         [SetUp]
-        public void SaveCurrentApiKey() {
-            //currentApiKey = System.getProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME);
+        public void SaveCurrentApiKey()
+        {
+            currentApiKey = Environment.GetEnvironmentVariable(ItemRetriever.UPC_API_KEY_PROPERTY_NAME);
         }
 
         [TearDown]
-        public void ResetCurrentApiKeyToSaved() {
+        public void ResetCurrentApiKeyToSaved()
+        {
             if (currentApiKey != null)
-                //System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey)
-                ;
+                Environment.SetEnvironmentVariable(
+                    ItemRetriever.UPC_API_KEY_PROPERTY_NAME, currentApiKey);
         }
 
         [Test]
-        public void ConstructsUrlUsingSystemPropertyForApiKey() {
-            //System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "SOME_API_KEY");
+        public void ConstructsUrlUsingSystemPropertyForApiKey()
+        {
+            Environment.SetEnvironmentVariable(
+                ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "SOME_API_KEY");
             var retriever = new ItemRetriever(null);
 
             string url = retriever.Url("123");

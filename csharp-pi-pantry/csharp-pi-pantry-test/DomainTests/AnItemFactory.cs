@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System;
 using Pipantry.Util;
+using Moq;
 
 namespace Test.Pipantry.Domain
 {
@@ -32,7 +33,7 @@ namespace Test.Pipantry.Domain
         [Test]
         public void AssignsNameToSourceName()
         {
-            string serverItemJson = JsonUtil.ToJson(new ItemBuilder("Cheerios").withSourceName("xxx").Create());
+            var serverItemJson = JsonUtil.ToJson(new ItemBuilder("Cheerios").withSourceName("xxx").Create());
 
             var item = factory.Create(serverItemJson);
 
@@ -62,12 +63,19 @@ namespace Test.Pipantry.Domain
         [Test]
         public void DefaultsSellByDateToPurchaseDate()
         {
-            //var now = DateTime.now();
-            //factory.setClock(TestClock.fixedTo(now));
+            var now = new DateTime(2018, 3, 17);
+            factory.DateTimeProvider = IDateTimeFixedTo(now);
 
-            //var parsedItem = factory.create(toJson(new Item()));
+            var parsedItem = factory.Create(JsonUtil.ToJson(new Item()));
 
-            //Assert.That(parsedItem.getSellByDate(), equalTo(now));
+            Assert.That(parsedItem.SellByDate, Is.EqualTo(now));
+        }
+
+        private static IDateTime IDateTimeFixedTo(DateTime dateTime)
+        {
+            var mock = new Mock<IDateTime>();
+            mock.Setup(p => p.Now).Returns(dateTime);
+            return mock.Object;
         }
 
         [Test]
