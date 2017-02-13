@@ -1,7 +1,8 @@
 using Pipantry.Domain;
+using Pipantry.Util;
 using NUnit.Framework;
 
-namespace Pipantry.Domain.Tests
+namespace Test.Pipantry.Domain
 {
     [TestFixture]
     public class AnItemRetriever
@@ -13,13 +14,14 @@ namespace Pipantry.Domain.Tests
         public void parsesResponseJsonToItem()
         {
             string wheatiesUpc = "0016000275652";
-            string responseText = toJson(new ItemBuilder("Wheaties").create());
-            when(httpClient.retrieveText(matches("http://.*/json/.*/" + wheatiesUpc)))
-                    .thenReturn(responseText);
+            string responseText = JsonUtil.ToJson(new ItemBuilder("Wheaties").create());
+            // TODO
+            //when(httpClient.RetrieveText(matches("http://.*/json/.*/" + wheatiesUpc)))
+            //        .thenReturn(responseText);
 
             var item = itemRetriever.retrieve(wheatiesUpc);
 
-            Assert.That(item.getName(), Is.EqualTo(("Wheaties")));
+            Assert.That(item.Name, Is.EqualTo(("Wheaties")));
         }
     }
 }

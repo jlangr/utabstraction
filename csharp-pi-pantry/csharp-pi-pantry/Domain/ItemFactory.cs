@@ -18,8 +18,8 @@ namespace Pipantry.Domain
 
         public Item Create(string json)
         {
-            Item item = JsonUtil.Parse<Item>(json, typeof(Item));
-            item.SourceName = item.Name);
+            var item = JsonUtil.Parse<Item>(json, typeof(Item));
+            item.SourceName = item.Name;
             item.ExpirationDate = DateTime.MaxValue;
             item.SellByDate = DateTimeProvider.Now;
             ChangeNameIfLocalMappingExists(item);

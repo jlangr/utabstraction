@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Pipantry.Domain;
 
-namespace Pipantry.Domain.Tests
+namespace Test.Pipantry.Domain
 {
     [TestFixture]
     public class AShelfLifeRepository
@@ -11,16 +11,15 @@ namespace Pipantry.Domain.Tests
         [Test]
         public void containsExistingValuesForKnownCategories()
         {
-            Assert.That(repo.contains("water"), Is.True);
+            Assert.That(repo.ContainsKey("water"), Is.True);
         }
 
         [Test]
         public void allowsStoringShelfLifeInfoForNewCategories()
         {
-            int refrigeratedDaysOfLife = 42;
-            repo.add("goop", new ShelfLife(refrigeratedDaysOfLife, 0));
+            repo.add("goop", new ShelfLife { Refrigerated = 42 });
 
-            Assert.That(repo.get("goop").getRefrigerated(), Is.EqualTo(refrigeratedDaysOfLife));
+            Assert.That(repo.Get("goop").Refrigerated, Is.EqualTo(42));
         }
     }
 }

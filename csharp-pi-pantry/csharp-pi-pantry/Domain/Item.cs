@@ -4,6 +4,9 @@ namespace Pipantry.Domain
 {
     public class Item
     {
+        public Item(string name) { Name = name; }
+        public Item() { }
+
         // see http://stackoverflow.com/questions/10519265/jackson-overcoming-underscores-in-favor-of-camel-case for alternatives
         //@JsonProperty("valid") private boolean isValid;
         //@JsonProperty("itemname") private String name;

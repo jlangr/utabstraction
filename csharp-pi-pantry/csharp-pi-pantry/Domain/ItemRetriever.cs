@@ -1,13 +1,13 @@
-using Pipantry.Domain;
 using Pipantry.Util;
 
-namespace PiPantry.Domain
+namespace Pipantry.Domain
 {
     public class ItemRetriever
     {
         private const string API_SERVER = "http://api.upcdatabase.org";
         public const string UPC_API_KEY_PROPERTY_NAME = "upcdatabase_api_key";
-        private string upcApiKey = System.getProperty(UPC_API_KEY_PROPERTY_NAME);
+        private string upcApiKey = null;
+            //System.getProperty(UPC_API_KEY_PROPERTY_NAME);
         private HttpClient httpClient;
         private ItemFactory itemFactory = new ItemFactory();
 
@@ -16,7 +16,7 @@ namespace PiPantry.Domain
             httpClient = client;
         }
 
-        string Url(string upcNumber)
+        public string Url(string upcNumber)
         {
             return $"{API_SERVER}/json/{upcApiKey}/{upcNumber}";
         }

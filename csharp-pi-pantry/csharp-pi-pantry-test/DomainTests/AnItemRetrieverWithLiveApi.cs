@@ -1,7 +1,9 @@
 using NUnit.Framework;
 using Pipantry.Domain;
+using Pipantry.Util;
 
-namespace Pipantry.Domain.Tests {
+namespace Test.Pipantry.Domain
+{
     [TestFixture]
     public class AnItemRetrieverWithLiveApi {
     [Ignore("cannot run without valid API key set in property")]
@@ -10,7 +12,7 @@ namespace Pipantry.Domain.Tests {
         public void retrievesItemInformationViaLiveHttpGet() {
             var retriever = new ItemRetriever(new HttpClient());
             var item = retriever.retrieve("0016000275652");
-            Assert.That(item.getName(), StartsWith("Wheaties"));
+            Assert.That(item.Name, Does.StartWith("Wheaties"));
         }
     }
 }

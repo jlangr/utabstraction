@@ -1,20 +1,20 @@
-package com.langrsoft.util;
+using NUnit.Framework;
+using Pipantry.Util;
 
-import com.langrsoft.testutil.Slow;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+namespace Test.Pipantry.Util
+{
+    [TestFixture]
+    public class AnHttpClient
+    {
+    //@Category(Slow.class)
+        [Test]
+        public void canRetrieveTextResponseFromUrl()
+        {
+            var client = new HttpClient();
+            string teapotStatus = "418";
+            string text = client.RetrieveText("http://httpbin.org/status/" + teapotStatus);
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
-
-public class AnHttpClient {
-    @Category(Slow.class)
-    @Test
-    public void canRetrieveTextResponseFromUrl() {
-        HttpClient client = new HttpClient();
-        String teapotStatus = "418";
-        String text = client.retrieveText("http://httpbin.org/status/" + teapotStatus);
-
-        assertThat(text.toLowerCase(), containsString("teapot"));
+            Assert.That(text.ToLower(), Does.Contain("teapot"));
+        }
     }
 }

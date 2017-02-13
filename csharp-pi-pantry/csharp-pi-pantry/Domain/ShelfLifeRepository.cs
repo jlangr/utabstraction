@@ -143,7 +143,7 @@ namespace Pipantry.Domain {
         }
 
         // operator overload []
-        public ShelfLife get(string category) {
+        public ShelfLife Get(string category) {
             return shelfLifeByCategory[category];
         }
 

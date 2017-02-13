@@ -8,12 +8,12 @@ namespace Pipantry.Domain {
             this.shelfLifeData = shelfLifeData;
         }
 
-        public DateTime getExpirationDate(Item item) {
+        public DateTime ExpirationDate(Item item) {
             if (item.ExpirationDate != null)
                 return item.ExpirationDate;
             if (item.Category == null)
                 return DateTime.MaxValue;
-            return ExpirationDate(shelfLifeData.get(item.Category), item.SellByDate);
+            return ExpirationDate(shelfLifeData.Get(item.Category), item.SellByDate);
         }
 
         private DateTime ExpirationDate(ShelfLife shelfLife, DateTime sellByDate) {

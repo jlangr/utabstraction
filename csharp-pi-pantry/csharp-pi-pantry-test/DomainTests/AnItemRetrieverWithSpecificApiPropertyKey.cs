@@ -1,7 +1,8 @@
 using NUnit.Framework;
 using Pipantry.Domain;
 
-namespace Pipantry.Domain.Tests {
+namespace Test.Pipantry.Domain
+{
     [TestFixture]
     public class AnItemRetrieverWithSpecificApiPropertyKey {
         string currentApiKey;
@@ -23,9 +24,9 @@ namespace Pipantry.Domain.Tests {
             //System.setProperty(ItemRetriever.UPC_API_KEY_PROPERTY_NAME, "SOME_API_KEY");
             var retriever = new ItemRetriever(null);
 
-            string url = retriever.url("123");
+            string url = retriever.Url("123");
 
-            Assert.That(url, EndsWith("SOME_API_KEY/123"));
+            Assert.That(url, Does.EndWith("SOME_API_KEY/123"));
         }
     }
 }

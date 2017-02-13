@@ -1,22 +1,24 @@
-package com.langrsoft.util;
+using NUnit.Framework;
+using Pipantry.Domain;
+using Pipantry.Util;
 
-import com.langrsoft.util.JsonParseException;
-import com.langrsoft.util.JsonUtil;
-import org.junit.Test;
+namespace Test.Pipantry.Util
+{
+    public class JSonUtilToJson
+    {
+        [Test]
+        public void convertsObjectToString()
+        {
+            object obj = null;
+            //new object() { public int x = 42; });
+            Assert.That(JsonUtil.ToJson(obj),
+                Is.EqualTo("{\"x\":42}"));
+        }
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-
-public class JSonUtilToJson {
-    @Test
-    public void convertsObjectToString() {
-        assertThat(JsonUtil.toJson(new Object() { public int x = 42; }),
-                is(equalTo("{\"x\":42}")));
-    }
-
-    @Test(expected=JsonParseException.class)
-    public void throwsRuntimeExceptionOnJsonProcessingException() {
-        JsonUtil.toJson(new Object());
+        [Test]
+        public void throwsRuntimeExceptionOnJsonProcessingException()
+        {
+            Assert.Throws<JsonParseException>(() => JsonUtil.ToJson(new object()));
+        }
     }
 }

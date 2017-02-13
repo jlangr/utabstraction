@@ -2,7 +2,7 @@ using System;
 using NUnit.Framework;
 using Pipantry.Domain;
 
-namespace Pipantry.Domain.Tests
+namespace Test.Pipantry.Domain
 {
     [TestFixture]
     public class AnExpirationDateCalculator
@@ -22,7 +22,7 @@ namespace Pipantry.Domain.Tests
         {
             var item = new ItemBuilder("").withExpirationDate(Today).create();
 
-            DateTime expiration = calculator.getExpirationDate(item);
+            var expiration = calculator.ExpirationDate(item);
 
             Assert.That(expiration, Is.EqualTo(Today));
         }
@@ -30,20 +30,18 @@ namespace Pipantry.Domain.Tests
         [Test]
         public void returnsIndefiniteWhenNeitherExpirationNorCategorySet()
         {
-            Assert.That(calculator.getExpirationDate(new Item()), Is.EqualTo(DateTime.MaxValue));
+            Assert.That(calculator.ExpirationDate(new Item()), Is.EqualTo(DateTime.MaxValue));
         }
 
         [Test]
         public void calculatesUsingShelfLifeAndSellByDate()
         {
-            int refrigerationLife = 10;
-            data.add("smelt", new ShelfLife(refrigerationLife, 0));
+            data.add("smelt", new ShelfLife { Refrigerated = 10 });
             var item = new ItemBuilder("").withCategory("smelt").withSellByDate(Today).create();
 
-            var expiration = calculator.getExpirationDate(item);
+            var expiration = calculator.ExpirationDate(item);
 
-            Assert.That(expiration, Is.EqualTo(Today.AddDays(refrigerationLife)));
+            Assert.That(expiration, Is.EqualTo(Today.AddDays(10)));
         }
     }
-}
 }

@@ -58,7 +58,7 @@ namespace Pipantry.Domain {
             return ItemsNamed(name).FirstOrDefault(); // TODO Item?
         }
 
-        public IEnumerable<Item> getItemsExpiringToday() {
+        public IEnumerable<Item> ItemsExpiringToday() {
             return items.Values.SelectMany(i => i).Where(item => item.ExpirationDate == DateTimeProvider.Now);
         }
 

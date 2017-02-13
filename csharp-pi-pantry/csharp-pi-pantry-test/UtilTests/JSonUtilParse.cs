@@ -1,25 +1,28 @@
-package com.langrsoft.util;
+using NUnit.Framework;
+using Pipantry.Domain;
+using Pipantry.Util;
 
-import org.junit.Test;
+namespace Test.Pipantry.Util
+{
+    public class JSonUtilParse
+    {
+        class X
+        {
+            public int y;
+        }
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+        [Test]
+        public void createsInstanceOfClassFromJson()
+        {
+            X x = JsonUtil.Parse<X>("{\"y\": 42}", typeof(X));
 
-public class JSonUtilParse {
-    static class X {
-        public int y;
-    }
+            Assert.That(x.y, Is.EqualTo(42));
+        }
 
-    @Test
-    public void createsInstanceOfClassFromJson() {
-        X x = JsonUtil.parse("{\"y\": 42}", X.class);
-
-        assertThat(x.y, is(equalTo(42)));
-    }
-
-    @Test(expected=JsonParseException.class)
-    public void throwsRuntimeExceptionOnJsonParseException() {
-        JsonUtil.parse("?", X.class);
+        [Test]
+        public void throwsRuntimeExceptionOnJsonParseException()
+        {
+            Assert.Throws<JsonParseException>(() => JsonUtil.Parse<X>("?", typeof(X)));
+        }
     }
 }

@@ -3,9 +3,8 @@ using Pipantry.Domain;
 using System;
 
 // TODO is a builder at all useful w/ C#?
-namespace Pipantry.Domain.Tests
+namespace Test.Pipantry.Domain
 {
-
     public class ItemBuilder
     {
         private string name;
@@ -24,12 +23,12 @@ namespace Pipantry.Domain.Tests
         public Item create()
         {
             var item = new Item(name);
-            item.setDescription(description);
-            item.setSourceName(sourceName);
-            item.setNumber(number);
-            item.setExpirationDate(expirationDate);
-            item.setSellByDate(sellByDate);
-            item.setCategory(category);
+            item.Description = description;
+            item.SourceName = sourceName;
+            item.Number = number;
+            item.ExpirationDate = expirationDate;
+            item.SellByDate = sellByDate;
+            item.Category = category;
             return item;
         }
 
