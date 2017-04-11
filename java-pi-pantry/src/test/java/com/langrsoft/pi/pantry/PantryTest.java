@@ -70,7 +70,7 @@ public class PantryTest {
             p.purchase(new Item("cheerios"));
 
             p.purchase(new Item("cheerios"));
-            assertThat(p.count("cheerios"), is(equalTo(2)));
+            assertThat("pantry count not correct for cheerioes", p.count("cheerios"), is(equalTo(2)));
 
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
@@ -91,7 +91,7 @@ public class PantryTest {
             pantry.purchase(new Item("sugar"));
             pantry.purchase(new Item("cheerios"));
             pantry.purchase(new Item("cheerios"));
-            assertThat(pantry.count(), is(equalTo(4)));
+            assertThat("pantry count not 4", pantry.count(), is(equalTo(4)));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
         }
@@ -110,7 +110,7 @@ public class PantryTest {
             sugar.setDescription("refined sweetener");
             pantry.purchase(sugar);
             Item retrieved = pantry.getItemNamed("sugar");
-            assertThat(retrieved, is(not(nullValue()))); // null?
+            assertThat("item should not be null", retrieved, is(not(nullValue()))); // null?
             assertThat(retrieved.getDescription(), is(equalTo("refined sweetener")));
         } catch (IllegalArgumentException e) {
             fail("purchase failed:" + e.getMessage());
