@@ -71,7 +71,7 @@ namespace Test.Pipantry.Domain
                 p.Purchase(new Item("cheerios"));
 
                 p.Purchase(new Item("cheerios"));
-                Assert.That(p.Count("cheerios"), Is.EqualTo(2));
+                Assert.That(p.Count("cheerios"),  Is.EqualTo(2), "pantry count not correct for cheerios");
 
             }
             catch (ArgumentException e)
@@ -95,7 +95,7 @@ namespace Test.Pipantry.Domain
                 pantry.Purchase(new Item("sugar"));
                 pantry.Purchase(new Item("cheerios"));
                 pantry.Purchase(new Item("cheerios"));
-                Assert.That(pantry.Count(), Is.EqualTo(4));
+                Assert.That(pantry.Count(), Is.EqualTo(4), "pantry count not 4");
             }
             catch (ArgumentException e)
             {
@@ -118,7 +118,7 @@ namespace Test.Pipantry.Domain
                 sugar.Description = "refined sweetener";
                 pantry.Purchase(sugar);
                 var retrieved = pantry.ItemNamed("sugar");
-                Assert.That(retrieved, Is.Not.Null); // null?
+                Assert.That(retrieved, Is.Not.Null, "item should not be null"); // null?
                 Assert.That(retrieved.Description, Is.EqualTo("refined sweetener"));
             }
             catch (ArgumentException e)
