@@ -1,6 +1,7 @@
 package com.langrsoft.testutil;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.css.CSSPrimitiveValue;
@@ -8,8 +9,10 @@ import org.w3c.dom.css.CSSPrimitiveValue;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.is;
@@ -399,27 +402,37 @@ public class PresentationSlideExamples {
         assertThat(oftenContents.get(2).getContentId(), is(1L));
     }
 
-    static class Repository {}
+    static class Repository {
+    }
+
     static class SesameTripleRepositoryFactory {
         public static Repository createInMemoryRepository() {
             return new Repository();
         }
     }
+
     static class SesameConceptRepositoryFactory {
         public static ObjectRepository createConceptRepository(Repository repository, Set<Class<?>> concepts, String s) {
             return new ObjectRepository();
         }
     }
-    static class ObjectRepository {}
-    class User {}
-    class Project {}
+
+    static class ObjectRepository {
+    }
+
+    class User {
+    }
+
+    class Project {
+    }
+
     class SesameConceptRepository {
         public SesameConceptRepository(ObjectRepository objectRepository) {
         }
     }
 
     @Test
-	public void testGetURI() {
+    public void testGetURI() {
         Repository repository = SesameTripleRepositoryFactory.createInMemoryRepository();
         Assert.assertNotNull(repository);
         Set<Class<?>> concepts = new HashSet<Class<?>>();
@@ -433,5 +446,195 @@ public class PresentationSlideExamples {
                 objectRepository);
         Assert.assertNotNull(conceptRepository);
         // ...
-	}
+    }
+
+    class TestIntRangeManager {
+        public List<Integer> mConfigList = new ArrayList<>();
+//        {
+//            mConfigList.add(1);
+//        }
+    }
+
+    @Test
+    public void emptyRangeManager() {
+        TestIntRangeManager testManager = new TestIntRangeManager();
+        assertEquals("expecting empty configlist", 0, testManager.mConfigList.size());
+    }
+
+    class HttpServletRequestImpl {
+        private Map<String, String> params = new HashMap<>();
+
+        public String getParameter(String key) {
+            return params.get(key);
+        }
+
+        public void addParams(String paramsString) {
+            for (String pair : paramsString.split("&")) {
+                String[] keyValue = pair.split("=");
+                String key = keyValue[0];
+                if (!params.containsKey(key)) {
+                    String value = decode(keyValue[1]);
+                    params.put(key, value);
+                }
+            }
+        }
+
+        private String decode(String s) {
+            return s.replace("%20", " ");
+        }
+
+        public void post(String url, String body) {
+            String postPath = url.split(" ")[1];
+            String postPathParams = postPath.split("\\?")[1];
+            addParams(postPathParams);
+            addParams(body);
+        }
+
+        public void execute(String content) {
+            String[] stuff = content.split("\r\n");
+            String body = stuff[stuff.length - 1];
+            String postUrl = stuff[0];
+            // assume only posts for now
+            post(postUrl, body);
+        }
+    }
+
+    private HttpServletRequestImpl request = new HttpServletRequestImpl();
+
+    private void addRawRequestContent(String post) {
+        request.execute(post);
+    }
+
+    @Before
+    public void setup() {
+        addRawRequestContent(
+                "POST /context/path1/path2/index.html?x=y&g=2%20g HTTP/1.1 \r\n" +
+                "Date: Tue, 01 May 2012 06:46:45 GMT \r\n" +
+                "Connection: close \r\n" +
+                "Host: www.myfavouriteamazingsite.com\r\n" +
+                "From: joebloe@somewebsitesomewhere.com \r\n" +
+                "Accept: text/html, text/plain \r\n" +
+                "Cookie: $Version=\"1\"; Customer=\"WILE_E_COYOTE\"; $Path=\"/acme\"; \r\n" +
+                "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1) \r\n" +
+                "Accept-Language: en-US, jp \r\n" +
+                "Accept-Language: cn \r\n" +
+                "Content-Length: " +
+                ("param1=value1&param2=value2&param1=value2").getBytes().length + "\r\n" +
+                "Content-Type: application/x-www-form-urlencoded;charset=UTF-8\r\n" +
+                "\r\n" +
+                "param1=value1&param2=value2&param1=value2"
+        );
+        // ...
+    }
+
+    @Test
+    public void test_getParameter() throws Exception {
+        // param1=value1&param2=value2&param1=value2
+        assertEquals(request.getParameter("x"), "y");
+        assertEquals(request.getParameter("g"), "2 g");
+        assertEquals(request.getParameter("param1"), "value1");
+        assertEquals(request.getParameter("param2"), "value2");
+    }
+
+    static class EncounterService {
+        public Encounter getEncounter(int i) {
+            return new Encounter();
+        }
+
+        public void saveEncounter(Encounter encounter) {
+            encounter.getObs().setObsId("1");
+        }
+    }
+
+    static class Context {
+        private static EncounterService encounterService;
+
+        public static EncounterService getEncounterService() {
+            return new EncounterService();
+        }
+    }
+
+    static class Encounter {
+        private LocalDateTime encounterDatetime = LocalDateTime.now();
+        private Obs obs;
+
+        public LocalDateTime getEncounterDatetime() {
+            return encounterDatetime;
+        }
+
+        public void addObs(Obs obs) {
+            this.obs = obs;
+        }
+
+        public Obs getObs() {
+            return obs;
+        }
+    }
+
+    class Obs {
+        private double valueNumeric;
+        private Date obsDatetime;
+        private String obsId;
+
+        public void setValueNumeric(double valueNumeric) {
+            this.valueNumeric = valueNumeric;
+        }
+
+        public void setObsDatetime(Date obsDatetime) {
+            this.obsDatetime = obsDatetime;
+        }
+
+        public String getObsId() {
+            return obsId;
+        }
+
+        public void setObsId(String obsId) {
+            this.obsId = obsId;
+        }
+    }
+
+
+/**
+ * You should be able to add an obs to an encounter, save the encounter, and have the obs
+ * automatically persisted.
+ */
+@Test
+public void saveEncounter_shouldCascadeSaveToContainedObsWhenEncounterAlreadyExists() {
+        EncounterService es = Context.getEncounterService();
+
+        // get an encounter from the database
+        Encounter encounter = es.getEncounter(1);
+        assertNotNull(encounter.getEncounterDatetime());
+
+        // Now add an obs to it
+        Obs obs = new Obs();
+        obs.setValueNumeric(50d);
+        obs.setObsDatetime(new Date());
+        encounter.addObs(obs);
+
+        // there should not be an obs id before saving the encounter
+        assertNull(obs.getObsId());
+
+        es.saveEncounter(encounter);
+
+        // the obs id should have been populated during the save
+        assertNotNull(obs.getObsId());
+    }
+
+    public void testNonCaptConstr() {
+        // Flags
+        Pattern pat = Pattern.compile("(?i)b*(?-i)a*");
+        assertTrue(pat.matcher("bBbBaaaa").matches());
+        assertFalse(pat.matcher("bBbBAaAa").matches());
+
+        // Non-capturing groups
+        pat = Pattern.compile("(?i:b*)a*");
+        assertTrue(pat.matcher("bBbBaaaa").matches());
+        assertFalse(pat.matcher("bBbBAaAa").matches());
+
+        // positive lookahead
+        pat = Pattern.compile(".*\\.(?=log$).*$");
+        assertTrue(pat.matcher("a.b.c.log").matches());
+        assertFalse(pat.matcher("a.b.c.log.").matches());
+    }
 }

@@ -7,12 +7,15 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
@@ -425,20 +428,30 @@ public class PresentationSlideExamplesCleaned {
         return results.stream().map(OftenContent::getScore).collect(toList());
     }
 
-    static class Repository {}
+    static class Repository {
+    }
+
     static class SesameTripleRepositoryFactory {
         public static Repository createInMemoryRepository() {
             return new Repository();
         }
     }
+
     static class SesameConceptRepositoryFactory {
         public static ObjectRepository createConceptRepository(Repository repository, Set<Class<?>> concepts, String s) {
             return new ObjectRepository();
         }
     }
-    static class ObjectRepository {}
-    class User {}
-    class Project {}
+
+    static class ObjectRepository {
+    }
+
+    class User {
+    }
+
+    class Project {
+    }
+
     class SesameConceptRepository {
         public SesameConceptRepository(ObjectRepository objectRepository) {
         }
@@ -470,5 +483,232 @@ public class PresentationSlideExamplesCleaned {
         SesameConceptRepository conceptRepository = new SesameConceptRepository(
                 objectRepository);
         // ...
+    }
+
+    class TestIntRangeManager {
+        public List<Integer> mConfigList = new ArrayList<>();
+//        {
+//            mConfigList.add(1);
+//        }
+    }
+
+    @Test
+    public void configListIsEmptyOnCreation() {
+        TestIntRangeManager testManager = new TestIntRangeManager();
+        assertEquals(0, testManager.mConfigList.size());
+    }
+
+    @Test
+    public void configListIsEmptyOnCreation2() {
+        TestIntRangeManager testManager = new TestIntRangeManager();
+        assertThat(testManager.mConfigList, is(empty()));
+    }
+
+    class HttpServletRequestImpl {
+        private Map<String, String> params = new HashMap<>();
+
+        public String getParameter(String key) {
+            return params.get(key);
+        }
+
+        public void addParams(String paramsString) {
+            for (String pair : paramsString.split("&")) {
+                String[] keyValue = pair.split("=");
+                String key = keyValue[0];
+                if (!params.containsKey(key)) {
+                    String value = decode(keyValue[1]);
+                    params.put(key, value);
+                }
+            }
+        }
+
+        private String decode(String s) {
+            return s.replace("%20", " ");
+        }
+
+        public void post(String url, String body) {
+            String[] postPathParts = url.split("\\?");
+            if (postPathParts.length > 1) {
+                String postPathParams = postPathParts[1];
+                addParams(postPathParams);
+            }
+            addParams(body);
+        }
+
+        public void execute(String content) {
+            String[] contentParts = content.split("\r\n");
+            String body = contentParts[contentParts.length - 1];
+            String postCommand = contentParts[0];
+            String postPath = postCommand.split(" ")[1];
+            // assume only posts for now
+            post(postPath, body);
+        }
+    }
+
+    private HttpServletRequestImpl request = new HttpServletRequestImpl();
+
+    String someHeaders(int length) {
+        return "Date: Tue, 01 May 2012 06:46:45 GMT \r\n" +
+               "Connection: close \r\n" +
+               "Host: www.myfavouriteamazingsite.com\r\n" +
+               "From: joebloe@somewebsitesomewhere.com \r\n" +
+               "Accept: text/html, text/plain \r\n" +
+               "Cookie: $Version=\"1\"; Customer=\"WILE_E_COYOTE\"; $Path=\"/acme\"; \r\n" +
+               "User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1) \r\n" +
+               "Accept-Language: en-US, jp \r\n" +
+               "Accept-Language: cn \r\n" +
+               "Content-Length: " + length + "\r\n" +
+               "Content-Type: application/x-www-form-urlencoded;charset=UTF-8\r\n" + "\r\n";
+    }
+
+    @Test
+    public void postStoresParametersFromBody() {
+        String body = "param1=value1&param2=value2";
+
+        request.execute("POST /somepath HTTP/1.1 \r\n"
+                        + someHeaders(body.length())
+                        + body);
+
+        assertEquals(request.getParameter("param1"), "value1");
+        assertEquals(request.getParameter("param2"), "value2");
+    }
+
+    @Test
+    public void postStoresParametersFromUrlAlso() {
+        String body = "param1=value1";
+
+        request.execute("POST /somepath?urlParam1=urlValue1 HTTP/1.1 \r\n"
+                        + someHeaders(body.length())
+                        + body);
+
+        assertEquals(request.getParameter("param1"), "value1");
+        assertEquals(request.getParameter("urlParam1"), "urlValue1");
+    }
+
+    @Test
+    public void postDecodesParamValues() {
+        String body = "param1=some%20value";
+
+        request.execute("POST /somepath HTTP/1.1 \r\n"
+                        + someHeaders(body.length())
+                        + body);
+
+        assertEquals(request.getParameter("param1"), "some value");
+    }
+
+    @Test
+    public void postIgnoresSubsequentDuplicateParamValue() {
+        String body = "param1=firstValue&param1=laterValue";
+
+        request.execute("POST /somepath HTTP/1.1 \r\n"
+                        + someHeaders(body.length())
+                        + body);
+
+        assertEquals(request.getParameter("param1"), "firstValue");
+    }
+
+    static class EncounterService {
+        public Encounter getEncounter(int i) {
+            return new Encounter();
+        }
+
+        public void saveEncounter(Encounter encounter) {
+            encounter.getObs().setObsId("1");
+        }
+    }
+
+    static class Context {
+        private static EncounterService encounterService;
+
+        public static EncounterService getEncounterService() {
+            return new EncounterService();
+        }
+    }
+
+    static class Encounter {
+        private LocalDateTime encounterDatetime = LocalDateTime.now();
+        private Obs obs;
+
+        public LocalDateTime getEncounterDatetime() {
+            return encounterDatetime;
+        }
+
+        public void addObs(Obs obs) {
+            this.obs = obs;
+        }
+
+        public Obs getObs() {
+            return obs;
+        }
+    }
+
+    class Obs {
+        private double valueNumeric;
+        private Date obsDatetime;
+        private String obsId;
+
+        public void setValueNumeric(double valueNumeric) {
+            this.valueNumeric = valueNumeric;
+        }
+
+        public void setObsDatetime(Date obsDatetime) {
+            this.obsDatetime = obsDatetime;
+        }
+
+        public String getObsId() {
+            return obsId;
+        }
+
+        public void setObsId(String obsId) {
+            this.obsId = obsId;
+        }
+    }
+
+    private EncounterService service;
+
+    @Before
+    public void createEncounterService() {
+        service = Context.getEncounterService();
+    }
+
+    @Test
+    public void saveCascadesToContainedObsForExistingEncounter() {
+        Encounter encounter = loadEncounterFromService();
+        encounter.addObs(createObsWithId(null));
+
+        service.saveEncounter(encounter);
+
+        assertNotNull(encounter.getObs().getObsId());
+    }
+
+    private Encounter loadEncounterFromService() {
+        return service.getEncounter(1);
+    }
+
+    private Obs createObsWithId(String id) {
+        Obs obs = new Obs();
+        obs.setObsId(null);
+        obs.setValueNumeric(50d);
+        obs.setObsDatetime(new Date());
+        return obs;
+    }
+
+    private Pattern pattern;
+    public void nonCapturingConstrWithFlags() {
+        pattern = Pattern.compile("(?i)b*(?-i)a*");
+        assertTrue(pattern.matcher("bBbBaaaa").matches());
+        assertFalse(pattern.matcher("bBbBAaAa").matches());
+    }
+
+    public void nonCapturingConstrWithGroups() {
+        pattern = Pattern.compile("(?i:b*)a*");
+        assertTrue(pattern.matcher("bBbBaaaa").matches());
+        assertFalse(pattern.matcher("bBbBAaAa").matches());
+    }
+
+    public void nonCapturingConstrWithPositiveLookahead() {
+        pattern = Pattern.compile(".*\\.(?=log$).*$");
+        assertTrue(pattern.matcher("a.b.c.log").matches());
+        assertFalse(pattern.matcher("a.b.c.log.").matches());
     }
 }
