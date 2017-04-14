@@ -9,6 +9,8 @@ import org.w3c.dom.css.CSSPrimitiveValue;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.nio.CharBuffer;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
@@ -22,6 +24,7 @@ import static org.junit.Assert.*;
 public class PresentationSlideExamples {
     private String description;
     private CSSPrimitiveValue text;
+    private StopPlaats stopPlaats;
 
     /**
      * summary Javadoc/XMLDOC comment, redundant with test name
@@ -594,12 +597,12 @@ public class PresentationSlideExamples {
     }
 
 
-/**
- * You should be able to add an obs to an encounter, save the encounter, and have the obs
- * automatically persisted.
- */
-@Test
-public void saveEncounter_shouldCascadeSaveToContainedObsWhenEncounterAlreadyExists() {
+    /**
+     * You should be able to add an obs to an encounter, save the encounter, and have the obs
+     * automatically persisted.
+     */
+    @Test
+    public void saveEncounter_shouldCascadeSaveToContainedObsWhenEncounterAlreadyExists() {
         EncounterService es = Context.getEncounterService();
 
         // get an encounter from the database
@@ -621,6 +624,7 @@ public void saveEncounter_shouldCascadeSaveToContainedObsWhenEncounterAlreadyExi
         assertNotNull(obs.getObsId());
     }
 
+    @Test
     public void testNonCaptConstr() {
         // Flags
         Pattern pat = Pattern.compile("(?i)b*(?-i)a*");
@@ -636,5 +640,243 @@ public void saveEncounter_shouldCascadeSaveToContainedObsWhenEncounterAlreadyExi
         pat = Pattern.compile(".*\\.(?=log$).*$");
         assertTrue(pat.matcher("a.b.c.log").matches());
         assertFalse(pat.matcher("a.b.c.log.").matches());
+    }
+
+    @Test
+    public void test_Reader_CharBuffer_ZeroChar() throws IOException {
+        //the charBuffer has the capacity of 0, then there the number of char read
+        // to the CharBuffer is 0. Furthermore, the MockReader is intact in its content.
+        String s = "MY TEST STRING";
+        char[] srcBuffer = s.toCharArray();
+        MockReader mockReader = new MockReader(srcBuffer);
+        CharBuffer charBuffer = CharBuffer.allocate(0);
+        int result = mockReader.read(charBuffer);
+        assertEquals(0, result);
+        char[] destBuffer = new char[srcBuffer.length];
+        mockReader.read(destBuffer);
+        assertEquals(s, String.valueOf(destBuffer));
+    }
+
+    class MockReader extends Reader {
+        private char[] contents;
+        private int current_offset = 0;
+        private int length = 0;
+
+        public MockReader() {
+            super();
+        }
+
+        public MockReader(char[] data) {
+            contents = data;
+            length = contents.length;
+        }
+
+        @Override
+        public void close() throws IOException {
+            contents = null;
+        }
+
+        @Override
+        public int read(char[] buf, int offset, int count) throws IOException {
+            if (null == contents) {
+                return -1;
+            }
+            if (length <= current_offset) {
+                return -1;
+            }
+            if (buf.length < offset + count) {
+                throw new IndexOutOfBoundsException();
+            }
+            count = Math.min(count, length - current_offset);
+            for (int i = 0; i < count; i++) {
+                buf[offset + i] = contents[current_offset + i];
+            }
+            current_offset += count;
+            return count;
+        }
+
+    }
+
+    class CentroidProcess {
+        public SimpleFeatureCollection execute(ListFeatureCollection fc) {
+            SimpleFeatureCollection c = new SimpleFeatureCollection();
+            c.add(new SimpleFeature(0, 0, "one"));
+            c.add(new SimpleFeature(10, 0, "two"));
+            return c;
+        }
+    }
+
+    class Point {
+        private double x;
+        private double y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public double getX() {
+            return x;
+        }
+
+        public double getY() {
+            return y;
+        }
+    }
+
+    class SimpleFeatureCollection {
+        List<SimpleFeature> features = new ArrayList<>();
+
+        public SimpleFeatureIterator features() {
+            return new SimpleFeatureIterator(features);
+        }
+
+        public void add(SimpleFeature simpleFeature) {
+            features.add(simpleFeature);
+        }
+    }
+
+    class SimpleFeatureIterator implements Iterator<SimpleFeature> {
+        private Iterator<SimpleFeature> featuresIterator;
+        private List<SimpleFeature> features;
+
+        public SimpleFeatureIterator(List<SimpleFeature> features) {
+            this.features = features;
+            featuresIterator = features.iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return featuresIterator.hasNext();
+        }
+
+        @Override
+        public SimpleFeature next() {
+            return featuresIterator.next();
+        }
+    }
+
+    class SimpleFeature {
+        private Object defaultGeometry;
+        private String name;
+
+        public SimpleFeature(int x, int y, String name) {
+            this.name = name;
+            this.defaultGeometry = new Point(x, y);
+        }
+
+        public Object getDefaultGeometry() {
+            return defaultGeometry;
+        }
+
+        public String getAttribute(String key) {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + ((Point) defaultGeometry).getX() + "," + ((Point) defaultGeometry).getY() + ")" + name;
+        }
+    }
+
+    class ListFeatureCollection {
+    }
+
+    ListFeatureCollection fc = new ListFeatureCollection();
+
+    @Test
+    public void testResults() throws Exception {
+        CentroidProcess cp = new CentroidProcess();
+        SimpleFeatureCollection result = cp.execute(fc);
+
+        SimpleFeatureIterator it = result.features();
+        assertTrue(it.hasNext());
+        SimpleFeature f = it.next();
+        assertEquals(0, ((Point) f.getDefaultGeometry()).getX(), 1e-6);
+        assertEquals(0, ((Point) f.getDefaultGeometry()).getY(), 1e-6);
+        assertEquals("one", f.getAttribute("name"));
+        f = it.next();
+        assertEquals(10, ((Point) f.getDefaultGeometry()).getX(), 1e-6);
+        assertEquals(0, ((Point) f.getDefaultGeometry()).getY(), 1e-6);
+        assertEquals("two", f.getAttribute("name"));
+    }
+
+    class StopPlaatsController {
+        public String addStopPlaats(StopPlaats sp, Object o, int tripId) {
+            return "";
+        }
+
+        public ModelAndView updateStopPlaatsPage(MockHttpServletRequest mockHttpServletRequest, Object o, String stopPlaatsID) {
+            return new ModelAndView();
+        }
+    }
+
+    StopPlaatsController stopPlaatsController = new StopPlaatsController();
+
+    class ModelAndView {
+        public String getViewName() {
+            return "StopPlaats/updateStopPlaats";
+        }
+    }
+
+    class Trip {
+        private ArrayList<StopPlaats> stopPlaatsen;
+        private int tripId;
+
+        public void setStopPlaatsen(ArrayList<StopPlaats> stopPlaatsen) {
+            this.stopPlaatsen = stopPlaatsen;
+        }
+
+        public ArrayList<StopPlaats> getStopPlaatsen() {
+            return stopPlaatsen;
+        }
+
+        public int getTripId() {
+            return tripId;
+        }
+    }
+
+    class TripDAO {
+        public void addTrip(Trip t) {
+        }
+    }
+
+    class StopPlaats {
+        private String stopPlaatsID;
+
+        public String getStopPlaatsID() {
+            return stopPlaatsID;
+        }
+    }
+
+    class MockHttpServletRequest {
+
+    }
+
+    TripDAO tripDAO = new TripDAO();
+
+    @Test
+    public void testUpdateStopPlaatsPage() {
+        ModelAndView mav = null;
+        Trip t = new Trip();
+        t.setStopPlaatsen(new ArrayList<StopPlaats>());
+        StopPlaats sp = getStopPlaats();
+        tripDAO.addTrip(t);
+        t.getStopPlaatsen().add(sp);
+
+        String s = "";
+        s = stopPlaatsController.addStopPlaats(sp, null, t.getTripId());
+
+        try {
+            mav = stopPlaatsController.updateStopPlaatsPage(
+                    new MockHttpServletRequest(), null, sp.getStopPlaatsID());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals("StopPlaats/updateStopPlaats", mav.getViewName());
+    }
+
+    public StopPlaats getStopPlaats() {
+        return new StopPlaats();
     }
 }
