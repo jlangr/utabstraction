@@ -26,10 +26,10 @@ public class PantryTest {
    @Test
    public void contains1() {
       try {
-         Pantry p = new Pantry();
+         Pantry pantry = new Pantry();
          Item i1 = new Item("cheerios");
-         p.purchase(i1);
-         assertThat(p.contains("cheerios"), equalTo(true));
+         pantry.purchase(i1);
+         assertThat(pantry.contains("cheerios"), equalTo(true));
       } catch (IllegalArgumentException e) {
          fail("purchase failed:" + e.getMessage());
       }
@@ -59,15 +59,15 @@ public class PantryTest {
    @Test
    public void count() {
       try {
-         Pantry p = new Pantry();
-         assertThat(p.count("sugar"), is(equalTo(0)));
+         Pantry pantry = new Pantry();
+         assertThat(pantry.count("sugar"), is(equalTo(0)));
 
-         p.purchase(new Item("sugar"));
+         pantry.purchase(new Item("sugar"));
 
-         p.purchase(new Item("cheerios"));
+         pantry.purchase(new Item("cheerios"));
 
-         p.purchase(new Item("cheerios"));
-         assertThat("pantry count not correct for cheerioes", p.count("cheerios"), is(equalTo(2)));
+         pantry.purchase(new Item("cheerios"));
+         assertThat("pantry count not correct for cheerioes", pantry.count("cheerios"), is(equalTo(2)));
 
       } catch (IllegalArgumentException e) {
          fail("purchase failed:" + e.getMessage());
@@ -130,8 +130,8 @@ public class PantryTest {
 
    @Test
    public void get3() {
-      Pantry pant = new Pantry();
-      assertThat(pant.getItemNamed("did not purchase"), is(nullValue()));
+      Pantry pantry = new Pantry();
+      assertThat(pantry.getItemNamed("did not purchase"), is(nullValue()));
    }
 
    @Test
