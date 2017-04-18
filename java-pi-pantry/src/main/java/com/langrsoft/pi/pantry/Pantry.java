@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class Pantry {
     private Map<String, List<Item>> items = new HashMap<>();
     private Clock clock = Clock.systemDefaultZone();
-    private static final int CAPACITY = 512;
+    public static final int CAPACITY = 512;
 
     public void purchase(Item item) {
         if (item == null) throw new IllegalArgumentException("item");
