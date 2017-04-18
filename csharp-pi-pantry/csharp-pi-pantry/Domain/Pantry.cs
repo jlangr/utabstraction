@@ -6,7 +6,7 @@ using System.Linq;
 namespace Pipantry.Domain {
     public class Pantry {
         private IDictionary<string, IList<Item>> items = new Dictionary<string, IList<Item>>();
-        private const int CAPACITY = 512;
+        public const int CAPACITY = 512;
 
         public Pantry()
         {
