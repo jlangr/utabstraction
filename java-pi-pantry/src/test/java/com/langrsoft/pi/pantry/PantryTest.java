@@ -33,9 +33,6 @@ public class PantryTest {
       }
    }
 
-   /**
-    * contains2
-    */
    @Test
    public void contains2() {
       try {
