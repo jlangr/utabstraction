@@ -62,7 +62,7 @@ namespace Pipantry.Domain {
             return items.Values.SelectMany(i => i).Where(item => item.ExpirationDate == DateTimeProvider.Now);
         }
 
-        public IEnumerable<Item> getAllExpiredItems() {
+        public IEnumerable<Item> AllExpiredItems() {
             return items.Values.SelectMany(i => i).Where(item => DateTimeProvider.Now >= item.ExpirationDate);
         }
     }

@@ -5,6 +5,7 @@ using Pipantry.Domain;
 using System.Linq;
 using Moq;
 using Pipantry.Util;
+using csharp_pi_pantry_test.DomainTests;
 
 namespace Test.Pipantry.Domain
 {
@@ -16,6 +17,9 @@ namespace Test.Pipantry.Domain
      */
     public class PantryTest
     {
+        private Pantry pantry = new Pantry();
+        private readonly DateTime Now = DateTime.Now;
+
         [Test]
         public void Contains1()
         {
@@ -213,36 +217,24 @@ namespace Test.Pipantry.Domain
         }
 
         [Test]
-        public void AllExpiredItems()
+        public void AllExpiredItemsIncludesItemsExpiringTodayOrEarlier()
         {
-            var pantry = new Pantry();
-            var d = DateTime.Now;
-            //pantry.setClock(TestClock.fixedTo(d));
-            var item1 = new Item("milk");
-            item1.Category = "milk";
-            item1.ExpirationDate = d;
-            pantry.Purchase(item1);
-            // add another item
-            var item2 = new Item("blood orange juice 24oz");
-            item2.ExpirationDate = d.AddDays(1);
-            item2.Category = "orange juice";
-            pantry.Purchase(item2);
-            string name = "curdled milk";
-            var item3 = new Item(name);
-            item3.ExpirationDate = d.AddDays(-1);
-            item1.Category = "milk";
-            pantry.Purchase(item3);
-            // retrieve
-            var items = pantry.getAllExpiredItems();
-            var actualItemNames = new List<string>();
-            foreach (var i in items)
-            {
-                actualItemNames.Add(i.Name);
-            }
-            var expectedItemNames = new List<string>();
-            expectedItemNames.Add(name);
-            expectedItemNames.Add("milk");
-            Assert.That(actualItemNames, Is.EquivalentTo(new string[] { "milk", "curdled milk" }));
+            SetPantryClockTo(Now);
+            pantry.Purchase(new ItemBuilder("milk").WithExpirationDate(Now).Create());
+            pantry.Purchase(new ItemBuilder("juice").WithExpirationDate(Now.AddDays(1)).Create());
+            pantry.Purchase(new ItemBuilder("curdled milk").WithExpirationDate(Now.AddDays(-1)).Create());
+
+            var items = pantry.AllExpiredItems();
+
+            Assert.That(items.Select(item => item.Name),
+                Is.EquivalentTo(new string[] { "milk", "curdled milk" }));
+        }
+
+        private void SetPantryClockTo(DateTime dateTime)
+        {
+            var mock = new Mock<IDateTime>();
+            mock.Setup(p => p.Now).Returns(dateTime);
+            pantry.DateTimeProvider = mock.Object;
         }
 
         [Test]
