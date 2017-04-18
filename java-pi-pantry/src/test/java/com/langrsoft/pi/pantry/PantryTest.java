@@ -1,21 +1,15 @@
 package com.langrsoft.pi.pantry;
 
-import com.google.common.collect.ImmutableList;
-import com.langrsoft.util.TestClock;
-import org.junit.Before;
-import org.junit.Test;
-import java.time.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import static com.langrsoft.util.LambdaUtil.map;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import java.time.*;
+import java.util.*;
+import org.junit.Test;
+import com.langrsoft.util.TestClock;
 
 /**
  * // Tests for Pantry class
@@ -23,6 +17,10 @@ import static org.junit.Assert.fail;
  * author: I'll never tell
  */
 public class PantryTest {
+   static final LocalDate NOW = LocalDate.now();
+
+   private Pantry pantry = new Pantry();
+
    @Test
    public void contains1() {
       try {
@@ -187,35 +185,18 @@ public class PantryTest {
       assertThat(actualItemNames, equalTo(expectedItemNames));
    }
 
+
    @Test
-   public void allExpiredItems() {
-      Pantry pantry = new Pantry();
-      LocalDate d = LocalDate.now();
-      pantry.setClock(TestClock.fixedTo(d));
-      Item item1 = new Item("milk");
-      item1.setCategory("milk");
-      item1.setExpirationDate(d);
-      pantry.purchase(item1);
-      // add another item
-      Item item2 = new Item("blood orange juice 24oz");
-      item2.setExpirationDate(d.plusDays(1));
-      item2.setCategory("orange juice");
-      pantry.purchase(item2);
-      String name = "curdled milk";
-      Item item3 = new Item(name);
-      item3.setExpirationDate(d.minusDays(1));
-      item1.setCategory("milk");
-      pantry.purchase(item3);
-      // retrieve
+   public void allExpiredItemsIncludesItemsExpiringTodayOrEarlier() {
+      pantry.setClock(TestClock.fixedTo(NOW));
+      pantry.purchase(new ItemBuilder("milk").withExpirationDate(NOW).create());
+      pantry.purchase(new ItemBuilder("juice").withExpirationDate(NOW.plusDays(1)).create());
+      pantry.purchase(new ItemBuilder("curdled milk").withExpirationDate(NOW.minusDays(1)).create());
+
       List<Item> items = pantry.getAllExpiredItems();
-      List<String> actualItemNames = new ArrayList<>();
-      for (Item i: items) {
-         actualItemNames.add(i.getName());
-      }
-      List<String> expectedItemNames = new ArrayList<>();
-      expectedItemNames.add(name);
-      expectedItemNames.add("milk");
-      assertThat(actualItemNames, containsInAnyOrder("milk", "curdled milk"));
+
+      assertThat(map(items, Item::getName),
+         containsInAnyOrder("milk", "curdled milk"));
    }
 
    @Test
