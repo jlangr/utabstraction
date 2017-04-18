@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.nio.CharBuffer;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
+import static com.langrsoft.util.LambdaUtil.*;
 
 public class PresentationSlideExamplesCleaned {
 
@@ -423,12 +425,13 @@ public class PresentationSlideExamplesCleaned {
 
         List<OftenContent> results = dao.findOftenContent("test");
 
-        assertThat(scores(results), is(equalTo(asList(3L, 2L, 1L))));
+        assertThat(map(results, OftenContent::getScore), is(equalTo(asList(3L, 2L, 1L))));
     }
 
     private List<Long> scores(List<OftenContent> results) {
         return results.stream().map(OftenContent::getScore).collect(toList());
     }
+
 
     static class Repository {
     }
