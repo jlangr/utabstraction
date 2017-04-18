@@ -36,9 +36,6 @@ namespace Test.Pipantry.Domain
             }
         }
 
-        /**
-         * contains2
-         */
         [Test]
         public void Contains2()
         {
