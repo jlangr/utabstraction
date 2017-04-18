@@ -113,7 +113,7 @@ namespace Test.Pipantry.Domain
             }
 
             [Test]
-            public void ReturnsEmptyListWhenNoItemsExistsForName()
+            public void ReturnsEmptyListWhenNoItemsPurchasedWithName()
             {
                 Assert.That(pantry.ItemsNamed("pizza"), Is.Empty);
             }
