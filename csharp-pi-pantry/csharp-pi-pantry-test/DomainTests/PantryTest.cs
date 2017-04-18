@@ -17,8 +17,14 @@ namespace Test.Pipantry.Domain
      */
     public class PantryTest
     {
-        private Pantry pantry = new Pantry();
+        private Pantry pantry;
         private readonly DateTime Now = DateTime.Now;
+
+        [SetUp]
+        public void Create()
+        {
+            pantry = new Pantry();
+        }
 
         [Test]
         public void Contains1()
