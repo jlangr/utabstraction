@@ -23,7 +23,6 @@ namespace Test.Pipantry.Domain
             {
                 var p = new Pantry();
                 var i1 = new Item("cheerios");
-                i1.Description = "cereal";
                 p.Purchase(i1);
                 Assert.That(p.Contains("cheerios"), Is.EqualTo(true));
             }
@@ -71,7 +70,7 @@ namespace Test.Pipantry.Domain
                 p.Purchase(new Item("cheerios"));
 
                 p.Purchase(new Item("cheerios"));
-                Assert.That(p.Count("cheerios"),  Is.EqualTo(2), "pantry count not correct for cheerios");
+                Assert.That(p.Count("cheerios"), Is.EqualTo(2), "pantry count not correct for cheerios");
 
             }
             catch (ArgumentException e)
@@ -88,19 +87,12 @@ namespace Test.Pipantry.Domain
         [Test]
         public void Count2()
         {
-            try
-            {
-                var pantry = new Pantry();
-                pantry.Purchase(new Item("sugar"));
-                pantry.Purchase(new Item("sugar"));
-                pantry.Purchase(new Item("cheerios"));
-                pantry.Purchase(new Item("cheerios"));
-                Assert.That(pantry.Count(), Is.EqualTo(4), "pantry count not 4");
-            }
-            catch (ArgumentException e)
-            {
-                Assert.Fail("purchase Failed:" + e.Message);
-            }
+            var pantry = new Pantry();
+            pantry.Purchase(new Item("sugar"));
+            pantry.Purchase(new Item("sugar"));
+            pantry.Purchase(new Item("cheerios"));
+            pantry.Purchase(new Item("cheerios"));
+            Assert.That(pantry.Count(), Is.EqualTo(4), "pantry count not 4");
         }
 
         /**
@@ -111,20 +103,13 @@ namespace Test.Pipantry.Domain
         [Test]
         public void Get0()
         {
-            try
-            {
-                var pantry = new Pantry();
-                var sugar = new Item("sugar");
-                sugar.Description = "refined sweetener";
-                pantry.Purchase(sugar);
-                var retrieved = pantry.ItemNamed("sugar");
-                Assert.That(retrieved, Is.Not.Null, "item should not be null"); // null?
-                Assert.That(retrieved.Description, Is.EqualTo("refined sweetener"));
-            }
-            catch (ArgumentException e)
-            {
-                Assert.Fail("purchase Failed:" + e.Message);
-            }
+            var pantry = new Pantry();
+            var sugar = new Item("sugar");
+            sugar.Description = "refined sweetener";
+            pantry.Purchase(sugar);
+            var retrieved = pantry.ItemNamed("sugar");
+            Assert.That(retrieved, Is.Not.Null, "item should not be null"); // null?
+            Assert.That(retrieved.Description, Is.EqualTo("refined sweetener"));
         }
 
         /**
@@ -136,28 +121,21 @@ namespace Test.Pipantry.Domain
         [Test]
         public void Dt()
         {
-            try
-            {
-                DateTime now = DateTime.Now;
-                DateTime todayAtNoon = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
-                var pantry = new Pantry();
-                var mock = new Mock<IDateTime>();
-                mock.Setup(p => p.Now).Returns(todayAtNoon);
+            DateTime now = DateTime.Now;
+            DateTime todayAtNoon = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
+            var pantry = new Pantry();
+            var mock = new Mock<IDateTime>();
+            mock.Setup(p => p.Now).Returns(todayAtNoon);
 
-                // inject fake clock
-                pantry.DateTimeProvider = mock.Object;
+            // inject fake clock
+            pantry.DateTimeProvider = mock.Object;
 
-                var eggs = new Item("eggs");
-                eggs.Description = "oval ovum";
-                pantry.Purchase(eggs);
-                var retrieved = pantry.ItemNamed("eggs");
-                Assert.That(retrieved, Is.Not.Null);
-                Assert.That(retrieved.PurchaseDate, Is.EqualTo(todayAtNoon));
-            }
-            catch (ArgumentException e)
-            {
-                Assert.Fail("purchase Failed:" + e.Message);
-            }
+            var eggs = new Item("eggs");
+            eggs.Description = "oval ovum";
+            pantry.Purchase(eggs);
+            var retrieved = pantry.ItemNamed("eggs");
+            Assert.That(retrieved, Is.Not.Null);
+            Assert.That(retrieved.PurchaseDate, Is.EqualTo(todayAtNoon));
         }
 
         [Test]
@@ -178,7 +156,6 @@ namespace Test.Pipantry.Domain
             }
             catch (ArgumentException e)
             {
-                Console.WriteLine(e.Message);
                 // ok
             }
         }
@@ -186,107 +163,86 @@ namespace Test.Pipantry.Domain
         [Test]
         public void Get2()
         {
-            try
-            {
-                var pantry = new Pantry();
-                var smallCoffee = new Item("coffee");
-                smallCoffee.Description = "small";
-                var largeCoffee = new Item("coffee");
-                largeCoffee.Description = "large";
-                pantry.Purchase(smallCoffee);
-                pantry.Purchase(largeCoffee);
-                var coffees = pantry.ItemsNamed("coffee");
-                Assert.That(coffees.Select(item => item.Description),
-                        Is.EquivalentTo(new string[] { "small", "large" }));
-                var items = pantry.ItemsNamed("pizza");
-                Assert.That(items, Is.Empty);
-            }
-            catch (ArgumentException e)
-            {
-                Assert.Fail("purchase Failed:" + e.Message);
-            }
+            var pantry = new Pantry();
+            var smallCoffee = new Item("coffee");
+            smallCoffee.Description = "small";
+            var largeCoffee = new Item("coffee");
+            largeCoffee.Description = "large";
+            pantry.Purchase(smallCoffee);
+            pantry.Purchase(largeCoffee);
+            var coffees = pantry.ItemsNamed("coffee");
+            Assert.That(coffees.Select(item => item.Description),
+                    Is.EquivalentTo(new string[] { "small", "large" }));
+            var items = pantry.ItemsNamed("pizza");
+            Assert.That(items, Is.Empty);
         }
 
         [Test]
         public void ExpieringToday()
         {
-            try
+            var pantry = new Pantry();
+            var now = DateTime.Now;
+
+            var mock = new Mock<IDateTime>();
+            mock.Setup(p => p.Now).Returns(now);
+
+            // inject fake clock
+            pantry.DateTimeProvider = mock.Object;
+
+            var item1 = new Item("milk");
+            item1.Category = "milk";
+            item1.ExpirationDate = now;
+            pantry.Purchase(item1);
+            // add another item
+            var item2 = new Item("blood orange juice 24oz");
+            item2.ExpirationDate = now.AddDays(1);
+            item2.Category = "orange juice";
+            pantry.Purchase(item2);
+            // retrieve
+            var items = pantry.ItemsExpiringToday();
+            var actualItemNames = new List<string>();
+            foreach (var i in items)
             {
-                var pantry = new Pantry();
-                var now = DateTime.Now;
-
-                var mock = new Mock<IDateTime>();
-                mock.Setup(p => p.Now).Returns(now);
-
-                // inject fake clock
-                pantry.DateTimeProvider = mock.Object;
-
-                var item1 = new Item("milk");
-                item1.Category = "milk";
-                item1.ExpirationDate = now;
-                pantry.Purchase(item1);
-                // add another item
-                var item2 = new Item("blood orange juice 24oz");
-                item2.ExpirationDate = now.AddDays(1);
-                item2.Category = "orange juice";
-                pantry.Purchase(item2);
-                // retrieve
-                var items = pantry.ItemsExpiringToday();
-                var actualItemNames = new List<string>();
-                foreach (var i in items)
-                {
-                    actualItemNames.Add(i.Name);
-                }
-                Console.WriteLine("actual item names:" + actualItemNames);
-                var expectedItemNames = new List<string>();
-                expectedItemNames.Add("milk");
-                Assert.That(actualItemNames,
-                        Is.EqualTo(expectedItemNames));
+                actualItemNames.Add(i.Name);
             }
-            catch (ArgumentException e)
-            {
-                Assert.Fail("purchase Failed:" + e.Message);
-            }
+            Console.WriteLine("actual item names:" + actualItemNames);
+            var expectedItemNames = new List<string>();
+            expectedItemNames.Add("milk");
+            Assert.That(actualItemNames,
+                    Is.EqualTo(expectedItemNames));
         }
 
         [Test]
         public void AllExpiredItems()
         {
-            try
+            var pantry = new Pantry();
+            var d = DateTime.Now;
+            //pantry.setClock(TestClock.fixedTo(d));
+            var item1 = new Item("milk");
+            item1.Category = "milk";
+            item1.ExpirationDate = d;
+            pantry.Purchase(item1);
+            // add another item
+            var item2 = new Item("blood orange juice 24oz");
+            item2.ExpirationDate = d.AddDays(1);
+            item2.Category = "orange juice";
+            pantry.Purchase(item2);
+            string name = "curdled milk";
+            var item3 = new Item(name);
+            item3.ExpirationDate = d.AddDays(-1);
+            item1.Category = "milk";
+            pantry.Purchase(item3);
+            // retrieve
+            var items = pantry.getAllExpiredItems();
+            var actualItemNames = new List<string>();
+            foreach (var i in items)
             {
-                var pantry = new Pantry();
-                var d = DateTime.Now;
-                //pantry.setClock(TestClock.fixedTo(d));
-                var item1 = new Item("milk");
-                item1.Category = "milk";
-                item1.ExpirationDate = d;
-                pantry.Purchase(item1);
-                // add another item
-                var item2 = new Item("blood orange juice 24oz");
-                item2.ExpirationDate = d.AddDays(1);
-                item2.Category = "orange juice";
-                pantry.Purchase(item2);
-                string name = "curdled milk";
-                var item3 = new Item(name);
-                item3.ExpirationDate = d.AddDays(-1);
-                item1.Category = "milk";
-                pantry.Purchase(item3);
-                // retrieve
-                var items = pantry.getAllExpiredItems();
-                var actualItemNames = new List<string>();
-                foreach (var i in items)
-                {
-                    actualItemNames.Add(i.Name);
-                }
-                var expectedItemNames = new List<string>();
-                expectedItemNames.Add(name);
-                expectedItemNames.Add("milk");
-                Assert.That(actualItemNames, Is.EquivalentTo(new string[] { "milk", "curdled milk" }));
+                actualItemNames.Add(i.Name);
             }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message);
-            }
+            var expectedItemNames = new List<string>();
+            expectedItemNames.Add(name);
+            expectedItemNames.Add("milk");
+            Assert.That(actualItemNames, Is.EquivalentTo(new string[] { "milk", "curdled milk" }));
         }
 
         [Test]
@@ -307,7 +263,6 @@ namespace Test.Pipantry.Domain
             catch (Exception e)
             {
                 // ok
-                Console.WriteLine(e.Message + " exception.");
             }
         }
     }
