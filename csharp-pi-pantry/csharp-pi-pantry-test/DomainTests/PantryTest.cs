@@ -21,10 +21,10 @@ namespace Test.Pipantry.Domain
         {
             try
             {
-                var p = new Pantry();
+                var pantry = new Pantry();
                 var i1 = new Item("cheerios");
-                p.Purchase(i1);
-                Assert.That(p.Contains("cheerios"), Is.EqualTo(true));
+                pantry.Purchase(i1);
+                Assert.That(pantry.Contains("cheerios"), Is.EqualTo(true));
             }
             catch (ArgumentException e)
             {
@@ -62,15 +62,15 @@ namespace Test.Pipantry.Domain
         {
             try
             {
-                var p = new Pantry();
+                var pantry = new Pantry();
                 //Assert.That(p.Count("sugar"), Is.Zero);
 
-                p.Purchase(new Item("sugar"));
+                pantry.Purchase(new Item("sugar"));
 
-                p.Purchase(new Item("cheerios"));
+                pantry.Purchase(new Item("cheerios"));
 
-                p.Purchase(new Item("cheerios"));
-                Assert.That(p.Count("cheerios"), Is.EqualTo(2), "pantry count not correct for cheerios");
+                pantry.Purchase(new Item("cheerios"));
+                Assert.That(pantry.Count("cheerios"), Is.EqualTo(2), "pantry count not correct for cheerios");
 
             }
             catch (ArgumentException e)
@@ -141,8 +141,8 @@ namespace Test.Pipantry.Domain
         [Test]
         public void Get3()
         {
-            var pant = new Pantry();
-            Assert.That(pant.ItemNamed("did not purchase"), Is.Null);
+            var pantry = new Pantry();
+            Assert.That(pantry.ItemNamed("did not purchase"), Is.Null);
         }
 
         [Test]
