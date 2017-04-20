@@ -187,36 +187,44 @@ namespace Test.Pipantry.Domain
         [Test]
         public void ExpieringToday()
         {
-            var pantry = new Pantry();
-            var now = DateTime.Now;
-
-            var mock = new Mock<IDateTime>();
-            mock.Setup(p => p.Now).Returns(now);
-
-            // inject fake clock
-            pantry.DateTimeProvider = mock.Object;
-
-            var item1 = new Item("milk");
-            item1.Category = "milk";
-            item1.ExpirationDate = now;
-            pantry.Purchase(item1);
-            // add another item
-            var item2 = new Item("blood orange juice 24oz");
-            item2.ExpirationDate = now.AddDays(1);
-            item2.Category = "orange juice";
-            pantry.Purchase(item2);
-            // retrieve
-            var items = pantry.ItemsExpiringToday();
-            var actualItemNames = new List<string>();
-            foreach (var i in items)
+            try
             {
-                actualItemNames.Add(i.Name);
+                var pan = new Pantry();
+
+                var now = DateTime.Now;
+                var mock = new Mock<IDateTime>();
+                mock.Setup(p => p.Now).Returns(now);
+                // inject fake clock
+                pan.DateTimeProvider = mock.Object;
+
+                var item1 = new Item("milk");
+                item1.Category = "milk";
+                item1.ExpirationDate = now;
+                pan.Purchase(item1);
+                // add another item
+                var item2Name = "blood orange juice 24oz";
+                var item2 = new Item(item2Name);
+                item2.ExpirationDate = now.AddDays(1);
+                item2.Category = "orange juice";
+                pan.Purchase(item2);
+                // retrieve
+                var items = pan.ItemsExpiringToday();
+                Assert.That(items, Is.Not.Null);
+                var actualItemNames = new List<string>();
+                foreach (var i in items)
+                {
+                    actualItemNames.Add(i.Name);
+                }
+                Console.WriteLine("actual item names:" + actualItemNames);
+                var expectedItemNames = new List<string>();
+                expectedItemNames.Add("milk");
+                Assert.That(actualItemNames,
+                        Is.EqualTo(expectedItemNames), "actual items mismatch");
             }
-            Console.WriteLine("actual item names:" + actualItemNames);
-            var expectedItemNames = new List<string>();
-            expectedItemNames.Add("milk");
-            Assert.That(actualItemNames,
-                    Is.EqualTo(expectedItemNames));
+            catch (Exception e)
+            {
+                Console.WriteLine($"error! {e.StackTrace}");
+            }
         }
 
         [Test]
